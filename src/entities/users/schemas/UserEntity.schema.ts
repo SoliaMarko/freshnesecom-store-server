@@ -24,6 +24,5 @@ export const UserEntitySchema = SchemaFactory.createForClass(UserEntity);
 
 UserEntitySchema.pre<UserEntity>('save', async function (next: NextFunction) {
   this.password = await hashPassword(this.password);
-  // console.log(this.password);
   next();
 });
