@@ -3,9 +3,13 @@ import {MongooseModule} from '@nestjs/mongoose';
 import {UserController} from './controllers/user.controller';
 import {UserService} from './services/user.service';
 import {UserEntity, UserEntitySchema} from './schemas/UserEntity.schema';
+// import {JwtModule} from '@nestjs/jwt';
 
 @Module({
-  imports: [MongooseModule.forFeature([{name: UserEntity.name, schema: UserEntitySchema}])],
+  imports: [
+    MongooseModule.forFeature([{name: UserEntity.name, schema: UserEntitySchema}])
+    // JwtModule.register({global: true, secret: process.env.JWT_KEY, signOptions: {expiresIn: process.env.JWT_EXPIRES}})
+  ],
   controllers: [UserController],
   providers: [UserService]
 })
