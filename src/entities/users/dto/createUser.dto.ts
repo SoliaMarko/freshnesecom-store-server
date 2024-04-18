@@ -1,15 +1,17 @@
 import {ApiProperty} from '@nestjs/swagger';
-import {IsEmail, IsNotEmpty, IsOptional, IsPhoneNumber, IsString} from 'class-validator';
-import {descriptions} from '@constants/swaggerConstants/userEntitiesDescriptions';
+import {IsEmail, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, Length} from 'class-validator';
+import {descriptions} from '@constants/swaggerConstants/userEntitiesDescriptions.constant';
 
 export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
+  @Length(2, 30)
   @ApiProperty({description: descriptions.FIRST_NAME_DESCRIPTION, example: 'Winston', required: true})
   readonly firstName: string;
 
   @IsNotEmpty()
   @IsString()
+  @Length(2, 50)
   @ApiProperty({description: descriptions.LAST_NAME_DESCRIPTION, example: 'Smith', required: true})
   readonly lastName: string;
 
