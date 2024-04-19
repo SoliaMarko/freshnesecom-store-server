@@ -7,6 +7,7 @@ import {UserEntity, UserEntitySchema} from '@entities/users/schemas/UserEntity.s
 import {MongooseModule} from '@nestjs/mongoose';
 import {ConfigModule, ConfigService} from '@nestjs/config';
 import {JwtModule} from '@nestjs/jwt';
+import {JwtStrategy} from 'strategy';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import {JwtModule} from '@nestjs/jwt';
     })
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserService]
+  providers: [AuthService, UserService, JwtStrategy]
 })
 export class AuthModule {}
