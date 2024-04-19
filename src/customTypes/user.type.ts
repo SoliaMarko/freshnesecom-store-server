@@ -1,3 +1,6 @@
+import {HydratedDocument} from 'mongoose';
 import {UserEntity} from '@entities/users/schemas/UserEntity.schema';
 
-export type UserResponseType = Omit<UserEntity, 'password' | 'phoneNumber'>;
+export type UserDocument = HydratedDocument<UserEntity>;
+
+export type UserResponseType = Omit<UserEntity, 'password'>;

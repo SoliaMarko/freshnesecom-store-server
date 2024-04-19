@@ -1,9 +1,6 @@
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 import {hashPassword} from '@utils/bcrypt';
 import {NextFunction} from 'interfaces/nextFunction.interface';
-import {HydratedDocument} from 'mongoose';
-
-export type UserDocument = HydratedDocument<UserEntity>;
 
 @Schema()
 export class UserEntity {
