@@ -12,7 +12,7 @@ export interface ExtendedRequest extends Request {
 export class AuthMiddleware implements NestMiddleware {
   constructor(private userService: UserService) {}
 
-  async use(req: ExtendedRequest, res: Response, next: NextFunction): Promise<any> | undefined {
+  async use(req: ExtendedRequest, res: Response, next: NextFunction): Promise<UserEntity> | undefined {
     if (!req.headers['authorization']) {
       req.user = null;
       next();
@@ -23,13 +23,11 @@ export class AuthMiddleware implements NestMiddleware {
 
     try {
       const decode = verify(token, process.env.JWT_SECRET) as {email: string};
-      console.log(decode);
       const user = await this.userService.findByEmail(decode.email);
       req.user = user;
       next();
     } catch (error) {
       req.user = null;
-      console.error(error);
       next();
     }
   }
