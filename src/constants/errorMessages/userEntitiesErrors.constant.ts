@@ -20,8 +20,10 @@ export const errorMessages = {
       UPPERCASES: errorMessagesGenerator.generateNotEnoughMessage(passwordValidationRules.UPPERCASE_MIN_COUNT, 'uppercase letters'),
       NUMBERS: errorMessagesGenerator.generateNotEnoughMessage(passwordValidationRules.NUMBERS_MIN_COUNT, 'numbers'),
       SYMBOLS: errorMessagesGenerator.generateNotEnoughMessage(passwordValidationRules.LOWERCASE_MIN_COUNT, 'symbols')
-    }
+    },
+    WRONG: 'Password is wrong'
   },
+  UNAUTHORIZED: 'Unauthorized',
   NOT_FOUND_BY_EMAIL: errorMessagesGenerator.generateNotFoundMessage('email'),
   NOT_FOUND_BY_ID: errorMessagesGenerator.generateNotFoundMessage('id')
 };

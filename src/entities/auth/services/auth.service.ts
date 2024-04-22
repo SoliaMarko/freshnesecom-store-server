@@ -5,7 +5,7 @@ import {InjectModel} from '@nestjs/mongoose';
 import {compare} from 'bcryptjs';
 import {Model} from 'mongoose';
 import {CreateUserDTO} from '../dto/createUser.dto';
-import {emailError} from '@constants/errorMessages/userEntitiesErrors.constant';
+import {emailError, errorMessages} from '@constants/errorMessages/userEntitiesErrors.constant';
 import {UserService} from '@entities/users/services/user.service';
 import {JwtService} from '@nestjs/jwt';
 
@@ -33,7 +33,7 @@ export class AuthService {
     const user = await this.userService.findByEmail(loginDTO.email);
     const isPasswordCorrect = await compare(loginDTO.password, user.password);
     if (!isPasswordCorrect) {
-      throw new HttpException('Password is wrong', HttpStatus.UNPROCESSABLE_ENTITY);
+      throw new HttpException(errorMessages.password.WRONG, HttpStatus.UNPROCESSABLE_ENTITY);
     }
     const payload = {...this.userService.buildUserResponse(user)};
 
