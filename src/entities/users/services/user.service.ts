@@ -3,6 +3,7 @@ import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {UserEntity} from '../schemas/UserEntity.schema';
 import {errorMessages} from '@constants/errorMessages/userEntitiesErrors.constant';
+import {UserResponseType} from '@customTypes/user.type';
 
 @Injectable()
 export class UserService {
@@ -20,5 +21,14 @@ export class UserService {
     if (user) return user;
 
     throw new HttpException(errorMessages.NOT_FOUND_BY_ID, HttpStatus.UNPROCESSABLE_ENTITY);
+  }
+
+  buildUserResponse(userEntity: UserEntity): UserResponseType {
+    return {
+      firstName: userEntity.firstName,
+      lastName: userEntity.lastName,
+      email: userEntity.email,
+      phoneNumber: userEntity.phoneNumber
+    };
   }
 }

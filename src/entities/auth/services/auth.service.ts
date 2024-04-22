@@ -1,4 +1,3 @@
-import {UserResponseType} from '@customTypes/user.type';
 import {LoginDTO} from '@entities/auth/dto/login.dto';
 import {UserEntity} from '@entities/users/schemas/UserEntity.schema';
 import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
@@ -18,35 +17,26 @@ export class AuthService {
     @InjectModel(UserEntity.name) private userModel: Model<UserEntity>
   ) {}
 
-  async createUser(userDTO: CreateUserDTO): Promise<string> {
+  async createUser(userDTO: CreateUserDTO): Promise<{accessToken: string}> {
     const user = await this.userModel.findOne({email: userDTO.email});
     if (user) {
       throw new HttpException(emailError.ALREADY_REGISTERED, HttpStatus.UNPROCESSABLE_ENTITY);
     }
     const newUser = new this.userModel(userDTO);
     await newUser.save();
-    const payload = {...this.buildUserResponse(newUser)};
+    const payload = {...this.userService.buildUserResponse(newUser)};
 
-    return this.jwtService.sign(payload);
+    return {accessToken: this.jwtService.sign(payload)};
   }
 
-  async login(loginDTO: LoginDTO): Promise<string> {
+  async login(loginDTO: LoginDTO): Promise<{accessToken: string}> {
     const user = await this.userService.findByEmail(loginDTO.email);
     const isPasswordCorrect = await compare(loginDTO.password, user.password);
     if (!isPasswordCorrect) {
       throw new HttpException('Password is wrong', HttpStatus.UNPROCESSABLE_ENTITY);
     }
-    const payload = {...this.buildUserResponse(user)};
+    const payload = {...this.userService.buildUserResponse(user)};
 
-    return this.jwtService.sign(payload);
-  }
-
-  buildUserResponse(userEntity: UserEntity): UserResponseType {
-    return {
-      firstName: userEntity.firstName,
-      lastName: userEntity.lastName,
-      email: userEntity.email,
-      phoneNumber: userEntity.phoneNumber
-    };
+    return {accessToken: this.jwtService.sign(payload)};
   }
 }

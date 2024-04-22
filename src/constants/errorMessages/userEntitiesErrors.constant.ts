@@ -1,11 +1,13 @@
 import {passwordValidationRules} from '@constants/validationRules/validationRules.constant';
 
-const generateNotEnoughMessage = (min: number, input: string): string => {
-  return `For security reasons password must contain at least ${min} ${input}`;
-};
+const errorMessagesGenerator = {
+  generateNotEnoughMessage: (min: number, input: string): string => {
+    return `For security reasons password must contain at least ${min} ${input}`;
+  },
 
-const generateNotFoundMessage = (value: string): string => {
-  return `Could not find the user with such ${value}`;
+  generateNotFoundMessage: (value: string): string => {
+    return `Could not find the user with such ${value}`;
+  }
 };
 
 export const errorMessages = {
@@ -14,14 +16,14 @@ export const errorMessages = {
   },
   password: {
     NOT_ENOUGH: {
-      LOWERCASES: generateNotEnoughMessage(passwordValidationRules.LOWERCASE_MIN_COUNT, 'lowercase letters'),
-      UPPERCASES: generateNotEnoughMessage(passwordValidationRules.UPPERCASE_MIN_COUNT, 'uppercase letters'),
-      NUMBERS: generateNotEnoughMessage(passwordValidationRules.NUMBERS_MIN_COUNT, 'numbers'),
-      SYMBOLS: generateNotEnoughMessage(passwordValidationRules.LOWERCASE_MIN_COUNT, 'symbols')
+      LOWERCASES: errorMessagesGenerator.generateNotEnoughMessage(passwordValidationRules.LOWERCASE_MIN_COUNT, 'lowercase letters'),
+      UPPERCASES: errorMessagesGenerator.generateNotEnoughMessage(passwordValidationRules.UPPERCASE_MIN_COUNT, 'uppercase letters'),
+      NUMBERS: errorMessagesGenerator.generateNotEnoughMessage(passwordValidationRules.NUMBERS_MIN_COUNT, 'numbers'),
+      SYMBOLS: errorMessagesGenerator.generateNotEnoughMessage(passwordValidationRules.LOWERCASE_MIN_COUNT, 'symbols')
     }
   },
-  NOT_FOUND_BY_EMAIL: generateNotFoundMessage('email'),
-  NOT_FOUND_BY_ID: generateNotFoundMessage('id')
+  NOT_FOUND_BY_EMAIL: errorMessagesGenerator.generateNotFoundMessage('email'),
+  NOT_FOUND_BY_ID: errorMessagesGenerator.generateNotFoundMessage('id')
 };
 
 export const emailError = errorMessages.email;

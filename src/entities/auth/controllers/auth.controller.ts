@@ -10,12 +10,12 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
-  async login(@Body() loginDTO: LoginDTO): Promise<string> {
+  async login(@Body() loginDTO: LoginDTO): Promise<{accessToken: string}> {
     return this.authService.login(loginDTO);
   }
 
   @Post('signup')
-  async createUser(@Body(new PasswordValidationPipe()) createUserDTO: CreateUserDTO): Promise<string> {
+  async createUser(@Body(new PasswordValidationPipe()) createUserDTO: CreateUserDTO): Promise<{accessToken: string}> {
     return this.authService.createUser(createUserDTO);
   }
 
