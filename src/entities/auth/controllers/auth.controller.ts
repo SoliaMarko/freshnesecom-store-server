@@ -1,4 +1,4 @@
-import {Body, Controller, Post, UseGuards} from '@nestjs/common';
+import {Body, Controller, Post, Res, UseGuards} from '@nestjs/common';
 import {AuthService} from '../services/auth.service';
 import {PasswordValidationPipe} from '@pipes/passwordValidation.pipe';
 import {CreateUserDTO} from '../dto/createUser.dto';
@@ -11,17 +11,17 @@ import {UserService} from '@entities/users/services/user.service';
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private userService: UserService
+    private readonly userService: UserService
   ) {}
-
-  @Post('login')
-  async login(@Body() loginDTO: LoginDTO): Promise<{accessToken: string}> {
-    return this.authService.login(loginDTO);
-  }
 
   @Post('signup')
   async createUser(@Body(new PasswordValidationPipe()) createUserDTO: CreateUserDTO): Promise<{accessToken: string}> {
     return this.authService.createUser(createUserDTO);
+  }
+
+  @Post('login')
+  async login(@Body() loginDTO: LoginDTO): Promise<{accessToken: string}> {
+    return this.authService.login(loginDTO);
   }
 
   @UseGuards(refreshJwtAuthGuard)
