@@ -3,11 +3,16 @@ import {AuthService} from '../services/auth.service';
 import {PasswordValidationPipe} from '@pipes/passwordValidation.pipe';
 import {CreateUserDTO} from '../dto/createUser.dto';
 import {LoginDTO} from '../dto/login.dto';
-import {jwtAuthGuard} from '@guards/jwt-guard';
+import {jwtAuthGuard} from '@guards/jwt-auth.guard';
+import {refreshJwtAuthGuard} from '@guards/refresh-jwt-auth.guard';
+import {UserService} from '@entities/users/services/user.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private userService: UserService
+  ) {}
 
   @Post('login')
   async login(@Body() loginDTO: LoginDTO): Promise<{accessToken: string}> {
@@ -17,6 +22,15 @@ export class AuthController {
   @Post('signup')
   async createUser(@Body(new PasswordValidationPipe()) createUserDTO: CreateUserDTO): Promise<{accessToken: string}> {
     return this.authService.createUser(createUserDTO);
+  }
+
+  @UseGuards(refreshJwtAuthGuard)
+  @Post('refresh')
+  async refreshToken(@Body() jwt: {refresh: string}): Promise<{accessToken: string}> {
+    const {sub: user_id} = this.authService.verifyToken(jwt.refresh);
+    const user = await this.userService.findById(user_id);
+
+    return this.authService.refreshToken(user);
   }
 
   @UseGuards(jwtAuthGuard)

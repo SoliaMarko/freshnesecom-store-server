@@ -23,7 +23,7 @@ export class AuthMiddleware implements NestMiddleware {
 
     try {
       const decode = verify(token, process.env.JWT_SECRET) as {email: string};
-      const user = await this.userService.findByEmail(decode.email);
+      const user = await this.userService.findByEmail({email: decode.email});
       req.user = user;
       next();
     } catch (error) {

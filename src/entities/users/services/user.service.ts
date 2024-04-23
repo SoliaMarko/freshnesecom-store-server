@@ -1,4 +1,4 @@
-import {Model} from 'mongoose';
+import {Model, Types} from 'mongoose';
 import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {UserEntity} from '../schemas/UserEntity.schema';
@@ -9,8 +9,13 @@ import {UserResponseType} from '@customTypes/user.type';
 export class UserService {
   constructor(@InjectModel(UserEntity.name) private userModel: Model<UserEntity>) {}
 
-  async findByEmail(email: string): Promise<UserEntity | undefined> {
-    const user = await this.userModel.findOne({email}).select('+password');
+  async findByEmail({email}: {email: string}): Promise<
+    | (UserEntity & {
+        _id: Types.ObjectId;
+      })
+    | undefined
+  > {
+    const user = await this.userModel.findOne({email});
     if (user) return user;
 
     throw new HttpException(errorMessages.NOT_FOUND_BY_EMAIL, HttpStatus.UNPROCESSABLE_ENTITY);
