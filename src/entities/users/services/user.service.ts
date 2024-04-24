@@ -2,7 +2,7 @@ import {Model} from 'mongoose';
 import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {UserEntity} from '../schemas/UserEntity.schema';
-import {errorMessages} from '@constants/errorMessages/userEntitiesErrors.constant';
+import {errorMessages} from '@constants/errorMessages/errorMessages.constant';
 import {UserDocument, UserResponseType} from '@customTypes/user.type';
 import {JwtService} from '@nestjs/jwt';
 
@@ -13,7 +13,7 @@ export class UserService {
     @InjectModel(UserEntity.name) private userModel: Model<UserDocument>
   ) {}
 
-  async findByEmail({email}: {email: string}): Promise<UserDocument | undefined> {
+  async findByEmail(email: string): Promise<UserDocument | undefined> {
     const user = await this.userModel.findOne({email}).select('+password');
     if (user) return user;
 
@@ -29,7 +29,6 @@ export class UserService {
 
   async getRefreshTokenById(id: string): Promise<string> {
     const refreshToken = (await this.userModel.findById(id)).refreshToken;
-    console.log('REFRESH TOKEN', refreshToken);
     if (refreshToken) return refreshToken;
 
     throw new HttpException(errorMessages.NOT_FOUND_BY_ID, HttpStatus.UNPROCESSABLE_ENTITY);

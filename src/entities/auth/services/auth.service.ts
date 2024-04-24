@@ -5,7 +5,7 @@ import {InjectModel} from '@nestjs/mongoose';
 import {compare} from 'bcryptjs';
 import {Model} from 'mongoose';
 import {CreateUserDTO} from '../dto/createUser.dto';
-import {emailError, errorMessages} from '@constants/errorMessages/userEntitiesErrors.constant';
+import {emailError, errorMessages} from '@constants/errorMessages/errorMessages.constant';
 import {UserService} from '@entities/users/services/user.service';
 import {JwtService} from '@nestjs/jwt';
 import {RefreshTokenPayload} from '@interfaces/refreshTokenPayload.interface';
@@ -35,10 +35,10 @@ export class AuthService {
   }
 
   async login(loginDTO: LoginDTO): Promise<AuthResponse> {
-    const user = await this.userService.findByEmail({email: loginDTO.email});
+    const user = await this.userService.findByEmail(loginDTO.email);
     const isPasswordCorrect = await compare(loginDTO.password, user.password);
     if (!isPasswordCorrect) {
-      throw new HttpException(errorMessages.password.WRONG, HttpStatus.UNPROCESSABLE_ENTITY);
+      throw new HttpException(errorMessages.password.INVALID, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     const {accessToken, refreshToken} = await this.userService.updateAndGetTokens(user);
@@ -54,10 +54,11 @@ export class AuthService {
     const savedRefreshToken = await this.userService.getRefreshTokenById(user._id.toString());
 
     if (refreshToken !== savedRefreshToken) {
-      throw new HttpException('Invalid refresh token', HttpStatus.UNPROCESSABLE_ENTITY);
+      throw new HttpException(errorMessages.refresh_token.INVALID, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     const {accessToken: updatedAccessToken, refreshToken: updatedRefreshToken} = await this.userService.updateAndGetTokens(user);
+
     return {
       status: 'success',
       accessToken: updatedAccessToken,
