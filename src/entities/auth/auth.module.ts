@@ -19,8 +19,7 @@ import {RefreshJwtStrategy} from 'strategy/refresh.strategy';
       imports: [ConfigModule],
       useFactory: () => ({
         global: true,
-        secret: process.env.JWT_SECRET,
-        signOptions: {expiresIn: process.env.ACCESS_TOKEN_EXPIRES}
+        secret: process.env.JWT_SECRET
       }),
       inject: [ConfigService]
     })

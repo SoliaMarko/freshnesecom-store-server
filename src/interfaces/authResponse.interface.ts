@@ -1,5 +1,7 @@
+import {UserResponseType} from '@customTypes/user.type';
+
 export interface AuthResponse {
-  fullName?: string;
+  user?: UserResponseType;
   accessToken: string;
   refreshToken: string;
 }

@@ -10,29 +10,27 @@ import {UserService} from '@entities/users/services/user.service';
 import {JwtService} from '@nestjs/jwt';
 import {RefreshTokenPayload} from '@interfaces/refreshTokenPayload.interface';
 import {AuthResponse} from '@interfaces/authResponse.interface';
+import {UserDocument, UserResponseType} from '@customTypes/user.type';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private userService: UserService,
-    @InjectModel(UserEntity.name) private userModel: Model<UserEntity>
+    @InjectModel(UserEntity.name) private userModel: Model<UserDocument>
   ) {}
 
-  async createUser(userDTO: CreateUserDTO): Promise<AuthResponse> {
+  async signup(userDTO: CreateUserDTO): Promise<{success: boolean; user: UserResponseType}> {
     const user = await this.userModel.findOne({email: userDTO.email});
     if (user) {
       throw new HttpException(emailError.ALREADY_REGISTERED, HttpStatus.UNPROCESSABLE_ENTITY);
     }
     const newUser = new this.userModel(userDTO);
     await newUser.save();
-    const accessTokenPayload = {...this.userService.buildUserResponse(newUser)};
-    const refreshTokenPayload = {sub: newUser._id};
 
     return {
-      fullName: `${newUser.firstName} ${newUser.lastName}`,
-      accessToken: this.jwtService.sign(accessTokenPayload),
-      refreshToken: this.jwtService.sign(refreshTokenPayload, {expiresIn: process.env.REFRESH_TOKEN_EXPIRES})
+      success: true,
+      user: this.userService.buildUserResponse(newUser)
     };
   }
 
@@ -42,21 +40,28 @@ export class AuthService {
     if (!isPasswordCorrect) {
       throw new HttpException(errorMessages.password.WRONG, HttpStatus.UNPROCESSABLE_ENTITY);
     }
-    const accessTokenPayload = {...this.userService.buildUserResponse(user)};
-    const refreshTokenPayload = {sub: user._id};
+
+    const {accessToken, refreshToken} = await this.userService.updateAndGetTokens(user);
 
     return {
-      fullName: `${user.firstName} ${user.lastName}`,
-      accessToken: this.jwtService.sign(accessTokenPayload),
-      refreshToken: this.jwtService.sign(refreshTokenPayload, {expiresIn: process.env.REFRESH_TOKEN_EXPIRES})
+      user: this.userService.buildUserResponse(user),
+      accessToken,
+      refreshToken
     };
   }
 
-  async refreshToken(user: UserEntity): Promise<{accessToken: string}> {
-    const payload = {...this.userService.buildUserResponse(user)};
+  async refreshToken(refreshToken: string, user: UserDocument): Promise<{status: string; accessToken: string; refreshToken: string}> {
+    const savedRefreshToken = await this.userService.getRefreshTokenById(user._id.toString());
 
+    if (refreshToken !== savedRefreshToken) {
+      throw new HttpException('Invalid refresh token', HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    const {accessToken: updatedAccessToken, refreshToken: updatedRefreshToken} = await this.userService.updateAndGetTokens(user);
     return {
-      accessToken: this.jwtService.sign(payload)
+      status: 'success',
+      accessToken: updatedAccessToken,
+      refreshToken: updatedRefreshToken
     };
   }
 

@@ -6,6 +6,7 @@ import {LoginDTO} from '../dto/login.dto';
 import {jwtAuthGuard} from '@guards/jwt-auth.guard';
 import {refreshJwtAuthGuard} from '@guards/refresh-jwt-auth.guard';
 import {UserService} from '@entities/users/services/user.service';
+import {UserResponseType} from '@customTypes/user.type';
 
 @Controller('auth')
 export class AuthController {
@@ -15,8 +16,8 @@ export class AuthController {
   ) {}
 
   @Post('signup')
-  async createUser(@Body(new PasswordValidationPipe()) createUserDTO: CreateUserDTO): Promise<{accessToken: string}> {
-    return this.authService.createUser(createUserDTO);
+  async signup(@Body(new PasswordValidationPipe()) createUserDTO: CreateUserDTO): Promise<{success: boolean; user: UserResponseType}> {
+    return this.authService.signup(createUserDTO);
   }
 
   @Post('login')
@@ -30,7 +31,7 @@ export class AuthController {
     const {sub: user_id} = this.authService.verifyToken(jwt.refresh);
     const user = await this.userService.findById(user_id);
 
-    return this.authService.refreshToken(user);
+    return this.authService.refreshToken(jwt.refresh, user);
   }
 
   @UseGuards(jwtAuthGuard)
