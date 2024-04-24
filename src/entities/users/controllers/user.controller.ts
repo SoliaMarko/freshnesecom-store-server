@@ -4,11 +4,11 @@ import {UserResponseType} from '@customTypes/user.type';
 import {ExtendedRequest} from '@middlewares/auth.middleware';
 import {errorMessages} from '@constants/errorMessages/userEntitiesErrors.constant';
 
-@Controller()
+@Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('user')
+  @Get()
   async currentUser(@Request() request: ExtendedRequest): Promise<UserResponseType> {
     if (!request.user) {
       throw new HttpException(errorMessages.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
