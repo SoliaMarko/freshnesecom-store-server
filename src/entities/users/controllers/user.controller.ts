@@ -1,19 +1,24 @@
-import {Controller, Get, HttpException, HttpStatus, Request} from '@nestjs/common';
+import {Controller, Get, Request, UseGuards} from '@nestjs/common';
 import {UserService} from '../services/user.service';
 import {UserResponseType} from '@customTypes/user.type';
 import {ExtendedRequest} from '@middlewares/auth.middleware';
-import {errorMessages} from '@constants/errorMessages/userEntitiesErrors.constant';
+import {jwtAuthGuard} from '@guards/jwt-auth.guard';
+import {JwtService} from '@nestjs/jwt';
 
-@Controller()
+@Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private jwtService: JwtService,
+    private readonly userService: UserService
+  ) {}
 
-  @Get('user')
-  async currentUser(@Request() request: ExtendedRequest): Promise<UserResponseType> {
-    if (!request.user) {
-      throw new HttpException(errorMessages.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
-    }
+  @UseGuards(jwtAuthGuard)
+  @Get()
+  async getCurrentUser(@Request() request: ExtendedRequest): Promise<UserResponseType> {
+    const accessToken = request.get('authorization').split(' ')[1];
+    const {email} = this.jwtService.verify(accessToken);
+    const user = await this.userService.findByEmail(email);
 
-    return this.userService.buildUserResponse(request.user);
+    return this.userService.buildUserResponse(user);
   }
 }

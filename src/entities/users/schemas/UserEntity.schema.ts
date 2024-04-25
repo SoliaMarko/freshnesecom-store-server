@@ -18,6 +18,12 @@ export class UserEntity {
 
   @Prop({required: false})
   phoneNumber?: string;
+
+  @Prop({required: false})
+  accessToken?: string;
+
+  @Prop({required: false})
+  refreshToken?: string;
 }
 
 export const UserEntitySchema = SchemaFactory.createForClass(UserEntity);

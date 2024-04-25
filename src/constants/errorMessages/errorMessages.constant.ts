@@ -21,7 +21,10 @@ export const errorMessages = {
       NUMBERS: errorMessagesGenerator.generateNotEnoughMessage(passwordValidationRules.NUMBERS_MIN_COUNT, 'numbers'),
       SYMBOLS: errorMessagesGenerator.generateNotEnoughMessage(passwordValidationRules.LOWERCASE_MIN_COUNT, 'symbols')
     },
-    WRONG: 'Password is wrong'
+    INVALID: 'Password is wrong'
+  },
+  refresh_token: {
+    INVALID: 'Refresh token is invalid'
   },
   UNAUTHORIZED: 'Unauthorized',
   NOT_FOUND_BY_EMAIL: errorMessagesGenerator.generateNotFoundMessage('email'),

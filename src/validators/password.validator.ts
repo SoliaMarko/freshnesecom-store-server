@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import {passwordErrorNotEnough} from '@constants/errorMessages/userEntitiesErrors.constant';
+import {passwordErrorNotEnough} from '@constants/errorMessages/errorMessages.constant';
 import {passwordRegexp} from '@constants/validationRules/regexps.constant';
 import {passwordValidationRules} from '@constants/validationRules/validationRules.constant';
 
