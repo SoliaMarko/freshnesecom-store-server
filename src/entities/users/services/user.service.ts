@@ -35,7 +35,7 @@ export class UserService {
   }
 
   async updateAndGetTokens(user: UserDocument): Promise<{accessToken: string; refreshToken: string}> {
-    const accessTokenPayload = {...this.buildUserResponse(user)};
+    const accessTokenPayload = this.buildUserResponse(user);
     const refreshTokenPayload = {sub: user._id};
 
     const accessToken = this.jwtService.sign(accessTokenPayload, {expiresIn: process.env.ACCESS_TOKEN_EXPIRES});
