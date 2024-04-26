@@ -5,7 +5,7 @@ import {CreateUserDTO} from '../dto/createUser.dto';
 import {LoginDTO} from '../dto/login.dto';
 import {refreshJwtAuthGuard} from '@guards/refresh-jwt-auth.guard';
 import {UserService} from '@entities/users/services/user.service';
-import {LoginResponse, LogoutResponse, RefreshTokenResponse, SignupResponse} from '../models/responses.model';
+import {LoginResponseModel, LogoutResponseModel, RefreshTokenResponseModel, SignupResponseModel} from '../models/authResponses.model';
 
 @Controller('auth')
 export class AuthController {
@@ -15,23 +15,23 @@ export class AuthController {
   ) {}
 
   @Post('signup')
-  async signup(@Body(new PasswordValidationPipe()) createUserDTO: CreateUserDTO): Promise<SignupResponse> {
-    return this.authService.signup(createUserDTO);
+  async signup(@Body(new PasswordValidationPipe()) userDTO: CreateUserDTO): Promise<SignupResponseModel> {
+    return this.authService.signup(userDTO);
   }
 
   @Post('login')
-  async login(@Body() loginDTO: LoginDTO): Promise<LoginResponse> {
+  async login(@Body() loginDTO: LoginDTO): Promise<LoginResponseModel> {
     return this.authService.login(loginDTO);
   }
 
   @Post('logout')
-  async logout(@Body() {email}: {email: string}): Promise<LogoutResponse> {
+  async logout(@Body() {email}: {email: string}): Promise<LogoutResponseModel> {
     return this.authService.logout(email);
   }
 
   @UseGuards(refreshJwtAuthGuard)
   @Post('refresh')
-  async refreshToken(@Body() jwt: {refresh: string}): Promise<RefreshTokenResponse> {
+  async refreshToken(@Body() jwt: {refresh: string}): Promise<RefreshTokenResponseModel> {
     const {sub: user_id} = this.authService.verifyToken(jwt.refresh);
     const user = await this.userService.findById(user_id);
 

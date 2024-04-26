@@ -8,9 +8,9 @@ import {CreateUserDTO} from '../dto/createUser.dto';
 import {emailError, errorMessages} from '@constants/errorMessages/errorMessages.constant';
 import {UserService} from '@entities/users/services/user.service';
 import {JwtService} from '@nestjs/jwt';
-import {RefreshTokenPayload} from '@interfaces/refreshTokenPayload.interface';
 import {UserDocument} from '@customTypes/user.type';
-import {LoginResponse, LogoutResponse, RefreshTokenResponse, SignupResponse} from '../models/responses.model';
+import {LoginResponseModel, LogoutResponseModel, RefreshTokenResponseModel, SignupResponseModel} from '../models/authResponses.model';
+import {RefreshPayloadModel} from '../models/jwtPayload.model';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +20,7 @@ export class AuthService {
     @InjectModel(UserEntity.name) private userModel: Model<UserDocument>
   ) {}
 
-  async signup(userDTO: CreateUserDTO): Promise<SignupResponse> {
+  async signup(userDTO: CreateUserDTO): Promise<SignupResponseModel> {
     const user = await this.userModel.findOne({email: userDTO.email});
     if (user) {
       throw new HttpException(emailError.ALREADY_REGISTERED, HttpStatus.UNPROCESSABLE_ENTITY);
@@ -34,13 +34,12 @@ export class AuthService {
     };
   }
 
-  async login(loginDTO: LoginDTO): Promise<LoginResponse> {
+  async login(loginDTO: LoginDTO): Promise<LoginResponseModel> {
     const user = await this.userService.findByEmail(loginDTO.email);
     const isPasswordCorrect = await compare(loginDTO.password, user.password);
     if (!isPasswordCorrect) {
       throw new HttpException(errorMessages.password.INVALID, HttpStatus.UNPROCESSABLE_ENTITY);
     }
-
     const {accessToken, refreshToken} = await this.userService.updateAndGetTokens(user);
 
     return {
@@ -50,7 +49,7 @@ export class AuthService {
     };
   }
 
-  async logout(email: string): Promise<LogoutResponse> {
+  async logout(email: string): Promise<LogoutResponseModel> {
     const user = await this.userService.findByEmail(email);
     await this.userService.clearTokens(user);
 
@@ -59,13 +58,11 @@ export class AuthService {
     };
   }
 
-  async refreshToken(refreshToken: string, user: UserDocument): Promise<RefreshTokenResponse> {
+  async refreshToken(refreshToken: string, user: UserDocument): Promise<RefreshTokenResponseModel> {
     const savedRefreshToken = await this.userService.getRefreshTokenById(user._id.toString());
-
     if (refreshToken !== savedRefreshToken) {
       throw new HttpException(errorMessages.refresh_token.INVALID, HttpStatus.UNPROCESSABLE_ENTITY);
     }
-
     const {accessToken: updatedAccessToken, refreshToken: updatedRefreshToken} = await this.userService.updateAndGetTokens(user);
 
     return {
@@ -75,7 +72,7 @@ export class AuthService {
     };
   }
 
-  verifyToken(token: string): RefreshTokenPayload {
+  verifyToken(token: string): RefreshPayloadModel {
     return this.jwtService.verify(token);
   }
 }

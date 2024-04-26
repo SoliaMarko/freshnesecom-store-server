@@ -1,21 +1,21 @@
 import {UserResponseType} from '@customTypes/user.type';
 
-export interface SignupResponse {
+export interface SignupResponseModel {
   success: boolean;
   user: UserResponseType;
 }
 
-export interface LoginResponse {
+export interface LoginResponseModel {
   user?: UserResponseType;
   accessToken: string;
   refreshToken: string;
 }
 
-export interface LogoutResponse {
+export interface LogoutResponseModel {
   status: string;
 }
 
-export interface RefreshTokenResponse {
+export interface RefreshTokenResponseModel {
   status: string;
   accessToken: string;
   refreshToken: string;

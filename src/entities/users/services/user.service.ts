@@ -5,6 +5,7 @@ import {UserEntity} from '../schemas/UserEntity.schema';
 import {errorMessages} from '@constants/errorMessages/errorMessages.constant';
 import {UserDocument, UserResponseType} from '@customTypes/user.type';
 import {JwtService} from '@nestjs/jwt';
+import {TokensResponseModel} from '../models/userResponses.model';
 
 @Injectable()
 export class UserService {
@@ -34,13 +35,11 @@ export class UserService {
     throw new HttpException(errorMessages.NOT_FOUND_BY_ID, HttpStatus.UNPROCESSABLE_ENTITY);
   }
 
-  async updateAndGetTokens(user: UserDocument): Promise<{accessToken: string; refreshToken: string}> {
+  async updateAndGetTokens(user: UserDocument): Promise<TokensResponseModel> {
     const accessTokenPayload = this.buildUserResponse(user);
     const refreshTokenPayload = {sub: user._id};
-
     const accessToken = this.jwtService.sign(accessTokenPayload, {expiresIn: process.env.ACCESS_TOKEN_EXPIRES});
     const refreshToken = this.jwtService.sign(refreshTokenPayload, {expiresIn: process.env.REFRESH_TOKEN_EXPIRES});
-
     await this.userModel.updateOne({email: user.email}, {$set: {accessToken: accessToken, refreshToken: refreshToken}});
 
     return {
