@@ -9,8 +9,8 @@ import {emailError, errorMessages} from '@constants/errorMessages/errorMessages.
 import {UserService} from '@entities/users/services/user.service';
 import {JwtService} from '@nestjs/jwt';
 import {RefreshTokenPayload} from '@interfaces/refreshTokenPayload.interface';
-import {AuthResponse} from '@interfaces/authResponse.interface';
-import {UserDocument, UserResponseType} from '@customTypes/user.type';
+import {UserDocument} from '@customTypes/user.type';
+import {LoginResponse, LogoutResponse, RefreshTokenResponse, SignupResponse} from '../models/responses.model';
 
 @Injectable()
 export class AuthService {
@@ -20,7 +20,7 @@ export class AuthService {
     @InjectModel(UserEntity.name) private userModel: Model<UserDocument>
   ) {}
 
-  async signup(userDTO: CreateUserDTO): Promise<{success: boolean; user: UserResponseType}> {
+  async signup(userDTO: CreateUserDTO): Promise<SignupResponse> {
     const user = await this.userModel.findOne({email: userDTO.email});
     if (user) {
       throw new HttpException(emailError.ALREADY_REGISTERED, HttpStatus.UNPROCESSABLE_ENTITY);
@@ -34,7 +34,7 @@ export class AuthService {
     };
   }
 
-  async login(loginDTO: LoginDTO): Promise<AuthResponse> {
+  async login(loginDTO: LoginDTO): Promise<LoginResponse> {
     const user = await this.userService.findByEmail(loginDTO.email);
     const isPasswordCorrect = await compare(loginDTO.password, user.password);
     if (!isPasswordCorrect) {
@@ -50,7 +50,7 @@ export class AuthService {
     };
   }
 
-  async logout(email: string): Promise<any> {
+  async logout(email: string): Promise<LogoutResponse> {
     const user = await this.userService.findByEmail(email);
     await this.userService.clearTokens(user);
 
@@ -59,7 +59,7 @@ export class AuthService {
     };
   }
 
-  async refreshToken(refreshToken: string, user: UserDocument): Promise<{status: string; accessToken: string; refreshToken: string}> {
+  async refreshToken(refreshToken: string, user: UserDocument): Promise<RefreshTokenResponse> {
     const savedRefreshToken = await this.userService.getRefreshTokenById(user._id.toString());
 
     if (refreshToken !== savedRefreshToken) {
