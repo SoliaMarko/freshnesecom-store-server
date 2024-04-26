@@ -25,6 +25,11 @@ export class AuthController {
     return this.authService.login(loginDTO);
   }
 
+  @Post('logout')
+  async logout(@Body() {email}: {email: string}): Promise<{accessToken: string}> {
+    return this.authService.logout(email);
+  }
+
   @UseGuards(refreshJwtAuthGuard)
   @Post('refresh')
   async refreshToken(@Body() jwt: {refresh: string}): Promise<{accessToken: string}> {

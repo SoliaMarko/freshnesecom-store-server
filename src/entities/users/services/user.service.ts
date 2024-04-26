@@ -49,6 +49,10 @@ export class UserService {
     };
   }
 
+  async clearTokens(user: UserDocument): Promise<void> {
+    await this.userModel.updateOne({email: user.email}, {$unset: {accessToken: '', refreshToken: ''}});
+  }
+
   buildUserResponse(userEntity: UserEntity): UserResponseType {
     return {
       firstName: userEntity.firstName,

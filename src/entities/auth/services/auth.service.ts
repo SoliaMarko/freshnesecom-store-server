@@ -50,6 +50,15 @@ export class AuthService {
     };
   }
 
+  async logout(email: string): Promise<any> {
+    const user = await this.userService.findByEmail(email);
+    await this.userService.clearTokens(user);
+
+    return {
+      status: 'success'
+    };
+  }
+
   async refreshToken(refreshToken: string, user: UserDocument): Promise<{status: string; accessToken: string; refreshToken: string}> {
     const savedRefreshToken = await this.userService.getRefreshTokenById(user._id.toString());
 
