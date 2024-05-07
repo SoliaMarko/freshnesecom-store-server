@@ -5,9 +5,10 @@ import {AppService} from './app.service';
 import {UserModule} from '@entities/users/user.module';
 import {AuthModule} from './entities/auth/auth.module';
 import {AuthMiddleware} from '@middlewares/auth.middleware';
+import {ProductModule} from '@entities/products/product.module';
 
 @Module({
-  imports: [MongooseModule.forRoot(process.env.MONGO_URI), UserModule, AuthModule],
+  imports: [MongooseModule.forRoot(process.env.MONGO_URI), UserModule, AuthModule, ProductModule],
   controllers: [AppController],
   providers: [AppService]
 })
