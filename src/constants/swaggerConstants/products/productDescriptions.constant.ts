@@ -33,8 +33,8 @@ const messageGenerators = {
     return `${messageGenerators.generateCommon(field, dataType)}  which must have props: ${props.join(', ')}`;
   },
 
-  generateMustBeNotLess: (min: number, field: string, dataType = 'number'): string => {
-    return `${messageGenerators.generateCommon(field, dataType)}   which must be not less than ${min}.`;
+  generateMustBeNotLess: (min: number, field: string, dataType = 'number', units = ''): string => {
+    return `${messageGenerators.generateCommon(field, dataType)}   which must be not less than ${min}. ${units}`;
   },
 
   generateMustAcceptValues: (values: string[], field: string, dataType: string): string => {
@@ -58,7 +58,7 @@ export const productDescriptions = {
     'images',
     'array'
   ),
-  PRICE_DESCRIPTION: messageGenerators.generateMustBeNotLess(priceValidationRules.MIN_PRICE, 'price', 'number'),
+  PRICE_DESCRIPTION: messageGenerators.generateMustBeNotLess(priceValidationRules.MIN_PRICE, 'price', 'number', 'USD'),
   MAIN_DESCRIPTION_DESCRIPTION: messageGenerators.generateMustHaveLengthInRange(
     mainDescriptionValidationRules.MIN_LENGTH,
     mainDescriptionValidationRules.MAX_LENGTH,
