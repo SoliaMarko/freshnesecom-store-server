@@ -29,6 +29,8 @@ export const productExamples = {
   PRODUCER_EXAMPLE: {category: 1, name: 'Grocery Tarm Fields'},
   DELIVERY_FROM_EXAMPLE: 'Europe',
   DELIVERY_AREA_EXAMPLE: ['Czech republic'],
+  FREE_SHIPPING_EXAMPLE: false,
   SIZES_EXAMPLE: ['all sizes'],
-  COLORS_EXAMPLE: ['white', 'blue']
+  COLORS_EXAMPLE: ['white', 'blue'],
+  NOTES_EXAMPLE: 'Any images displayed are representational in nature. Please note that actual products may differ slightly from what is depicted.'
 };

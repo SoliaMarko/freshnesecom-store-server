@@ -78,6 +78,10 @@ export const productValidationRules = {
   rating: {
     MIN_VALUE: 0,
     MAX_VALUE: 5
+  },
+  notes: {
+    MIN_LENGTH: 2,
+    MAX_LENGTH: 500
   }
 };
 

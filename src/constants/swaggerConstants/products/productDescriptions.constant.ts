@@ -126,6 +126,7 @@ export const productDescriptions = {
     'delivery area',
     'array of strings'
   ),
+  FREE_SHIPPING_DESCRIPTION: messageGenerators.generateCommon('free shipping', 'boolean'),
   SIZES_DESCRIPTION: messageGenerators.generateMustHaveLengthInRange(
     productValidationRules.sizes.MIN_LENGTH,
     productValidationRules.sizes.MAX_LENGTH,
@@ -137,5 +138,11 @@ export const productDescriptions = {
     productValidationRules.colors.MAX_LENGTH,
     'colors',
     'array of strings'
+  ),
+  NOTES_DESCRIPTION: messageGenerators.generateMustHaveLengthInRange(
+    productValidationRules.notes.MIN_LENGTH,
+    productValidationRules.notes.MAX_LENGTH,
+    'notes',
+    'string'
   )
 };

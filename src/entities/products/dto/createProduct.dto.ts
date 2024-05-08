@@ -1,5 +1,5 @@
 import {ApiProperty} from '@nestjs/swagger';
-import {ArrayMaxSize, ArrayMinSize, ArrayUnique, IsEnum, IsInt, IsNotEmpty, IsOptional, Length, Max, Min} from 'class-validator';
+import {ArrayMaxSize, ArrayMinSize, ArrayUnique, IsBoolean, IsEnum, IsInt, IsNotEmpty, IsOptional, Length, Max, Min} from 'class-validator';
 import {AdditionalDescription} from '../models/additionalDescription.model';
 import {Producer} from '../models/producer.model';
 import {ValidateEachInArrayHas} from '@validators/class-validator-exteders/validateEachInArrayHas/validateEachInArrayHas';
@@ -114,6 +114,11 @@ export class CreateProductDTO {
   readonly deliveryArea?: string[];
 
   @IsOptional()
+  @IsBoolean()
+  @ApiProperty()
+  readonly freeShipping?: boolean;
+
+  @IsOptional()
   @ArrayUnique()
   @Length(productValidationRules.sizes.MIN_LENGTH, productValidationRules.sizes.MAX_LENGTH, {each: true})
   @ApiProperty(productSwaggerSchema.SIZES_SCHEMA)
@@ -124,4 +129,9 @@ export class CreateProductDTO {
   @Length(productValidationRules.colors.MIN_LENGTH, productValidationRules.colors.MAX_LENGTH, {each: true})
   @ApiProperty(productSwaggerSchema.COLORS_SCHEMA)
   readonly colors?: string[];
+
+  @IsOptional()
+  @Length(productValidationRules.notes.MIN_LENGTH, productValidationRules.notes.MAX_LENGTH)
+  @ApiProperty()
+  readonly notes?: string;
 }

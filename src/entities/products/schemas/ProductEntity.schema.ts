@@ -68,6 +68,9 @@ export class ProductEntity {
   @Prop({required: false})
   deliveryArea?: string[];
 
+  @Prop({required: false, default: false})
+  freeShipping: boolean;
+
   @Prop({required: false})
   sizes?: string[];
 
@@ -84,6 +87,9 @@ export class ProductEntity {
   set rating(_value) {
     throw new Error('Rating cannot be set manually');
   }
+
+  @Prop({required: false})
+  notes: string;
 }
 
 export const ProductEntitySchema = SchemaFactory.createForClass(ProductEntity);

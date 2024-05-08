@@ -33,6 +33,8 @@ export const productSwaggerSchema = {
   PRODUCER_SCHEMA: {description: productDescriptions.PRODUCER_DESCRIPTION, example: productExamples.PRODUCER_EXAMPLE, required: false},
   DELIVERY_FROM_SCHEMA: {description: productDescriptions.DELIVERY_FROM_DESCRIPTION, example: productExamples.DELIVERY_FROM_EXAMPLE, required: false},
   DELIVERY_AREA_SCHEMA: {description: productDescriptions.DELIVERY_AREA_DESCRIPTION, example: productExamples.DELIVERY_AREA_EXAMPLE, required: false},
+  FREE_SHIPPING_SCHEMA: {description: productDescriptions.FREE_SHIPPING_DESCRIPTION, example: productExamples.FREE_SHIPPING_EXAMPLE, required: false},
   SIZES_SCHEMA: {description: productDescriptions.SIZES_DESCRIPTION, example: productExamples.SIZES_EXAMPLE, required: false},
-  COLORS_SCHEMA: {description: productDescriptions.COLORS_DESCRIPTION, example: productExamples.COLORS_EXAMPLE, required: false}
+  COLORS_SCHEMA: {description: productDescriptions.COLORS_DESCRIPTION, example: productExamples.COLORS_EXAMPLE, required: false},
+  NOTES_SCHEMS: {description: productDescriptions.NOTES_DESCRIPTION, example: productExamples.NOTES_EXAMPLE, required: false}
 };
