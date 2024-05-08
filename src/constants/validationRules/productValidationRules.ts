@@ -84,21 +84,3 @@ export const productValidationRules = {
     MAX_LENGTH: 500
   }
 };
-
-// export const titleValidationRules = productValidationRules.title;
-// export const categoryValidationRules = productValidationRules.category;
-// export const subCategoryValidationRules = productValidationRules.subCategory;
-// export const imagesValidationRules = productValidationRules.images;
-// export const priceValidationRules = productValidationRules.price;
-// export const mainDescriptionValidationRules = productValidationRules.mainDescription;
-// export const additionalDescriptionsValidationRules = productValidationRules.additionalDescription;
-// export const discountValidationRules = productValidationRules.discount;
-// export const countryCodeValidationRules = productValidationRules.countryCode;
-// export const inStockCountValidationRules = productValidationRules.inStockCount;
-// export const quantityUnitsValidationRules = productValidationRules.quantityUnits;
-// export const freshnessValidationRules = productValidationRules.freshness;
-// export const producerValidationRules = productValidationRules.producer;
-// export const deliveryLocationValidationRules = productValidationRules.deliveryLocation;
-// export const sizesValidationRules = productValidationRules.sizes;
-// export const colorsValidationRules = productValidationRules.colors;
-// export const ratingValidationRules = productValidationRules.rating;
