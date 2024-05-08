@@ -54,20 +54,23 @@ export const productDescriptions = {
   ),
   ADDITIONAL_DESCRIPTIONS_DESCRIPTION:
     messageGenerators.generateMustHaveProps(['title', 'content*'], 'additional description', 'array of objects') +
-    ': 1) ' +
-    messageGenerators.generateMustHaveLengthInRange(
-      productValidationRules.additionalDescription.title.MIN_LENGTH,
-      productValidationRules.additionalDescription.title.MAX_LENGTH,
-      "additional description's title (isn't required)",
-      'string'
-    ) +
-    ': 2) ' +
-    messageGenerators.generateMustHaveLengthInRange(
-      productValidationRules.additionalDescription.content.MIN_LENGTH,
-      productValidationRules.additionalDescription.content.MAX_LENGTH,
-      "additional description's content (is required)",
-      'string'
-    ),
+    ': ' +
+    [
+      messageGenerators.generateMustHaveLengthInRange(
+        productValidationRules.additionalDescription.title.MIN_LENGTH,
+        productValidationRules.additionalDescription.title.MAX_LENGTH,
+        "additional description's title (isn't required)",
+        'string'
+      ),
+      messageGenerators.generateMustHaveLengthInRange(
+        productValidationRules.additionalDescription.content.MIN_LENGTH,
+        productValidationRules.additionalDescription.content.MAX_LENGTH,
+        "additional description's content (is required)",
+        'string'
+      )
+    ]
+      .map((message, index) => `${++index}) ${message}`)
+      .join(' '),
   DISCOUNT_DESCRIPTION: messageGenerators.generateMustBeInRange(
     productValidationRules.discount.MIN_DISCOUNT,
     productValidationRules.discount.MAX_DISCOUNT,
@@ -95,19 +98,22 @@ export const productDescriptions = {
   FRESHNESS_DESCRIPTION: messageGenerators.generateMustAcceptValues(getNumericEnumValues(productValidationRules.freshness.ENUM), 'freshness', 'enum'),
   PRODUCER_DESCRIPTION:
     messageGenerators.generateMustHaveProps(['category*', 'name*'], 'producer', 'object') +
-    ': 1) ' +
-    messageGenerators.generateMustAcceptValues(
-      getNumericEnumValues(productValidationRules.producer.category.ENUM),
-      "producer's category (is required)",
-      'enum'
-    ) +
-    ': 2) ' +
-    messageGenerators.generateMustHaveLengthInRange(
-      productValidationRules.producer.name.MIN_LENGTH,
-      productValidationRules.producer.name.MAX_LENGTH,
-      "producer's name (is required)",
-      'string'
-    ),
+    ': ' +
+    [
+      messageGenerators.generateMustAcceptValues(
+        getNumericEnumValues(productValidationRules.producer.category.ENUM),
+        "producer's category (is required)",
+        'enum'
+      ),
+      messageGenerators.generateMustHaveLengthInRange(
+        productValidationRules.producer.name.MIN_LENGTH,
+        productValidationRules.producer.name.MAX_LENGTH,
+        "producer's name (is required)",
+        'string'
+      )
+    ]
+      .map((message, index) => `${++index}) ${message}`)
+      .join(' '),
   DELIVERY_FROM_DESCRIPTION: messageGenerators.generateMustHaveLengthInRange(
     productValidationRules.deliveryLocation.MIN_LENGTH,
     productValidationRules.deliveryLocation.MAX_LENGTH,
