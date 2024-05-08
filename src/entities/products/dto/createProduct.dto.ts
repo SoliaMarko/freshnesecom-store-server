@@ -115,7 +115,7 @@ export class CreateProductDTO {
 
   @IsOptional()
   @IsBoolean()
-  @ApiProperty()
+  @ApiProperty(productSwaggerSchema.FREE_SHIPPING_SCHEMA)
   readonly freeShipping?: boolean;
 
   @IsOptional()
@@ -132,6 +132,6 @@ export class CreateProductDTO {
 
   @IsOptional()
   @Length(productValidationRules.notes.MIN_LENGTH, productValidationRules.notes.MAX_LENGTH)
-  @ApiProperty()
+  @ApiProperty(productSwaggerSchema.NOTES_SCHEMS)
   readonly notes?: string;
 }
