@@ -21,7 +21,7 @@ const messageGenerators = {
   },
 
   generateMustAcceptValues: (values: string[], field: string, dataType: string): string => {
-    return `${messageGenerators.generateCommon(field, dataType)}  with possible values: ${values.join(', ')}.`;
+    return `${messageGenerators.generateCommon(field, dataType)} with possible values: ${values.join(', ')}.`;
   },
 
   generateMustBeUnique: () => `Must be unique.`
