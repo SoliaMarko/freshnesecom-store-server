@@ -3,64 +3,66 @@ import {Freshness} from '@enums/products/freshness.enum';
 import {QuantityUnits} from '@enums/products/quantityUnits.enum';
 import {AdditionalDescription} from '../models/additionalDescription.model';
 import {Producer} from '../models/producer.model';
-import {
-  categoryValidationRules,
-  countryCodeValidationRules,
-  deliveryLocationValidationRules,
-  discountValidationRules,
-  freshnessValidationRules,
-  imagesValidationRules,
-  inStockCountValidationRules,
-  mainDescriptionValidationRules,
-  priceValidationRules,
-  quantityUnitsValidationRules,
-  ratingValidationRules,
-  subCategoryValidationRules,
-  titleValidationRules
-} from '@constants/validationRules/productValidationRules';
+import {productValidationRules} from '@constants/validationRules/productValidationRules';
 
 @Schema()
 export class ProductEntity {
-  @Prop({required: true, unique: true, trim: true, minlength: titleValidationRules.MIN_LENGTH, maxlength: titleValidationRules.MAX_LENGTH})
+  @Prop({
+    required: true,
+    unique: true,
+    trim: true,
+    minlength: productValidationRules.title.MIN_LENGTH,
+    maxlength: productValidationRules.title.MAX_LENGTH
+  })
   title: string;
 
-  @Prop({required: true, enum: categoryValidationRules.ENUM})
+  @Prop({required: true, enum: productValidationRules.category.ENUM})
   category: number;
 
-  @Prop({required: true, enum: subCategoryValidationRules.ENUM})
+  @Prop({required: true, enum: productValidationRules.subCategory.ENUM})
   subCategory: number;
 
-  @Prop({required: true, minlength: imagesValidationRules.MIN_COUNT, maxlength: imagesValidationRules.MAX_COUNT})
+  @Prop({required: true, minlength: productValidationRules.images.MIN_COUNT, maxlength: productValidationRules.images.MAX_COUNT})
   images: string[];
 
-  @Prop({required: true, min: priceValidationRules.MIN_PRICE})
+  @Prop({required: true, min: productValidationRules.price.MIN_PRICE})
   price: number;
 
-  @Prop({required: true, trim: true, minlength: mainDescriptionValidationRules.MIN_LENGTH, maxlength: mainDescriptionValidationRules.MAX_LENGTH})
+  @Prop({
+    required: true,
+    trim: true,
+    minlength: productValidationRules.mainDescription.MIN_LENGTH,
+    maxlength: productValidationRules.mainDescription.MAX_LENGTH
+  })
   mainDescription: string;
 
   @Prop({required: true, type: [AdditionalDescription]})
   additionalDescriptions: AdditionalDescription[];
 
-  @Prop({required: false, min: discountValidationRules.MIN_DISCOUNT, max: discountValidationRules.MAX_DISCOUNT, default: 0})
+  @Prop({required: false, min: productValidationRules.discount.MIN_DISCOUNT, max: productValidationRules.discount.MAX_DISCOUNT, default: 0})
   discount?: number;
 
-  @Prop({required: false, minlength: countryCodeValidationRules.MIN_LENGTH, maxlength: countryCodeValidationRules.MAX_LENGTH})
+  @Prop({required: false, minlength: productValidationRules.countryCode.MIN_LENGTH, maxlength: productValidationRules.countryCode.MAX_LENGTH})
   countryCode?: string;
 
-  @Prop({required: false, min: inStockCountValidationRules.MIN_COUNT, max: inStockCountValidationRules.MAX_COUNT, default: 0})
+  @Prop({required: false, min: productValidationRules.inStockCount.MIN_COUNT, max: productValidationRules.inStockCount.MAX_COUNT, default: 0})
   inStockCount?: number;
 
-  @Prop({required: false, type: [Number], enum: quantityUnitsValidationRules.ENUM, default: [QuantityUnits.Pcs]})
+  @Prop({required: false, type: [Number], enum: productValidationRules.quantityUnits.ENUM, default: [QuantityUnits.Pcs]})
   quantityUnits?: number[];
 
-  @Prop({required: false, enum: freshnessValidationRules.ENUM, default: Freshness.New})
+  @Prop({required: false, enum: productValidationRules.freshness.ENUM, default: Freshness.New})
   freshness?: number;
 
   @Prop({required: false})
   producer?: Producer;
 
-  @Prop({required: false, trim: true, minlength: deliveryLocationValidationRules.MIN_LENGTH, maxlength: deliveryLocationValidationRules.MAX_LENGTH})
+  @Prop({
+    required: false,
+    trim: true,
+    minlength: productValidationRules.deliveryLocation.MIN_LENGTH,
+    maxlength: productValidationRules.deliveryLocation.MAX_LENGTH
+  })
   deliveryFrom?: string;
 
   @Prop({required: false})
@@ -72,7 +74,7 @@ export class ProductEntity {
   @Prop({required: false})
   colors?: string[];
 
-  @Prop({required: false, min: ratingValidationRules.MIN_VALUE, max: ratingValidationRules.MAX_VALUE, default: 0})
+  @Prop({required: false, min: productValidationRules.rating.MIN_VALUE, max: productValidationRules.rating.MAX_VALUE, default: 0})
   _rating?: number;
 
   get rating() {
