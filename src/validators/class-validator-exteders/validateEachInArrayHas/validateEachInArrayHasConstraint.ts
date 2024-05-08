@@ -1,12 +1,12 @@
 import {AdditionalDescription} from '@entities/products/models/additionalDescription.model';
 import {ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface} from 'class-validator';
 
-export interface EachHasConstraintInput {
+export interface ValidateEachInArrayHasConstraintInput {
   property: string;
 }
 
-@ValidatorConstraint({name: 'eachHasConstraint', async: false})
-export class EachHasConstraint implements ValidatorConstraintInterface {
+@ValidatorConstraint({name: 'validateEachInArrayHasConstraint', async: false})
+export class ValidateEachInArrayHasConstraint implements ValidatorConstraintInterface {
   validate(values: [AdditionalDescription], args?: ValidationArguments): boolean {
     const {property} = args.constraints[0];
 

@@ -2,7 +2,7 @@ import {ApiProperty} from '@nestjs/swagger';
 import {ArrayMaxSize, ArrayMinSize, ArrayUnique, IsEnum, IsInt, IsNotEmpty, IsOptional, Length, Max, Min} from 'class-validator';
 import {AdditionalDescription} from '../models/additionalDescription.model';
 import {Producer} from '../models/producer.model';
-import {EachHas} from '@validators/class-validator-exteders/eachHas/eachHas';
+import {ValidateEachInArrayHas} from '@validators/class-validator-exteders/validateEachInArrayHas/validateEachInArrayHas';
 import {HasValid} from '@validators/class-validator-exteders/hasValid/hasValid';
 import {HasValidLength} from '@validators/class-validator-exteders/hasValidLength/hasValidLength';
 import {StartsWith} from '@validators/class-validator-exteders/startsWith/startsWith';
@@ -44,7 +44,7 @@ export class CreateProductDTO {
   readonly mainDescription: string;
 
   @IsOptional()
-  @EachHas({property: 'content'})
+  @ValidateEachInArrayHas({property: 'content'})
   @HasValidLength({
     property: 'title',
     min: productValidationRules.additionalDescription.title.MIN_LENGTH,
