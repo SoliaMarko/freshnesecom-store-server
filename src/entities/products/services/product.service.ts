@@ -18,8 +18,8 @@ export class ProductService {
     };
   }
 
-  async getProducts(page: number, itemsPerPage: number): Promise<PaginatedDTO<ProductResponseType>> {
-    const {products, itemsCount} = await this.repository.getProducts(page, itemsPerPage);
+  async getAllProducts(page: number, itemsPerPage: number): Promise<PaginatedDTO<ProductResponseType>> {
+    const {products, itemsCount} = await this.repository.getAllProducts(page, itemsPerPage);
 
     return new PaginatedDTO<ProductResponseType>(products, page, itemsPerPage, itemsCount);
   }

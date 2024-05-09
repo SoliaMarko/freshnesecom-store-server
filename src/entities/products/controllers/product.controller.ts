@@ -19,9 +19,9 @@ export class ProductController {
 
   @UseGuards(jwtAuthGuard)
   @Get()
-  async getProducts(@Query() paginationQueryParams: PaginationQueryParams): Promise<PaginatedDTO<ProductResponseType>> {
+  async getAllProducts(@Query() paginationQueryParams: PaginationQueryParams): Promise<PaginatedDTO<ProductResponseType>> {
     const {page, itemsPerPage} = paginationQueryParams;
 
-    return this.productService.getProducts(page, itemsPerPage);
+    return this.productService.getAllProducts(page, itemsPerPage);
   }
 }

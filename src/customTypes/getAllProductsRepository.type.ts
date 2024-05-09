@@ -1,3 +1,3 @@
 import {ProductResponseType} from './product.type';
 
-export type GetProductRepositoryType = {products: ProductResponseType[]; itemsCount: number};
+export type GetAllProductsRepositoryType = {products: ProductResponseType[]; itemsCount: number};

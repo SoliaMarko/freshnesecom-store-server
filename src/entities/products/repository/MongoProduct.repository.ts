@@ -6,7 +6,7 @@ import {ProductEntity} from '../schemas/ProductEntity.schema';
 import {Model} from 'mongoose';
 import {ProductDocument, ProductResponseType} from '@customTypes/product.type';
 import {productErrorMessages} from '@constants/errorMessages/productErrorMessages.constant';
-import {GetProductRepositoryType} from '@customTypes/getAllProductsRepository.type';
+import {GetAllProductsRepositoryType} from '@customTypes/getAllProductsRepository.type';
 
 @Injectable()
 export class MongoProductRepository implements ProductRepository {
@@ -22,7 +22,7 @@ export class MongoProductRepository implements ProductRepository {
     return await newProduct.save();
   }
 
-  async getProducts(page: number, itemsPerPage: number): Promise<GetProductRepositoryType> {
+  async getAllProducts(page: number, itemsPerPage: number): Promise<GetAllProductsRepositoryType> {
     const products = await this.productModel
       .find()
       .limit(itemsPerPage)
