@@ -24,7 +24,6 @@ export class ProductController {
     return this.productService.getAllProducts(page, itemsPerPage);
   }
 
-  @UseGuards(jwtAuthGuard)
   @Get(':id')
   async getSingleProduct(@Param('id') productID: string): Promise<ProductResponseType> {
     return this.productService.getSingleProduct(productID);
