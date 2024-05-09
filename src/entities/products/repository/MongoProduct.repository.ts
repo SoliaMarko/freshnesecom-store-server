@@ -32,4 +32,8 @@ export class MongoProductRepository implements ProductRepository {
 
     return {products, itemsCount};
   }
+
+  async getSingleProduct(productID: string): Promise<ProductResponseType> {
+    return await this.productModel.findById(productID);
+  }
 }

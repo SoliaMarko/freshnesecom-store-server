@@ -23,4 +23,8 @@ export class ProductService {
 
     return new PaginatedDTO<ProductResponseType>(products, page, itemsPerPage, itemsCount);
   }
+
+  async getSingleProduct(productID: string): Promise<ProductResponseType> {
+    return await this.repository.getSingleProduct(productID);
+  }
 }
