@@ -1,11 +1,13 @@
 import {jwtAuthGuard} from '@guards/jwt-auth.guard';
-import {Body, Controller, Get, Post, Query, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Query, UseGuards, HttpException, HttpStatus} from '@nestjs/common';
 import {ProductService} from '../services/product.service';
 import {CreateProductDTO} from '../dto/createProduct.dto';
 import {CreateProductResponseModel} from '../models/createProductResponse.model';
 import {PaginatedDTO} from '../dto/pagination.dto';
 import {ProductResponseType} from '@customTypes/product.type';
 import {PaginationQueryParams} from '../models/paginationQueryParams.model';
+import {Types} from 'mongoose';
+import {productErrorMessages} from '@constants/errorMessages/productErrorMessages.constant';
 
 @Controller('product')
 export class ProductController {
@@ -22,5 +24,15 @@ export class ProductController {
     const {page, itemsPerPage} = paginationQueryParams;
 
     return this.productService.getAllProducts(page, itemsPerPage);
+  }
+
+  @Get(':id')
+  async getProductById(@Param('id') productID: string): Promise<ProductResponseType> {
+    const isValid = Types.ObjectId.isValid(productID);
+    if (!isValid) {
+      throw new HttpException(productErrorMessages.INVALID_ID, HttpStatus.BAD_REQUEST);
+    }
+
+    return this.productService.getProductById(productID);
   }
 }
