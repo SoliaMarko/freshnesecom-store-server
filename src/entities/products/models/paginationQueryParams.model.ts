@@ -5,7 +5,7 @@ import {IsInt, Min} from 'class-validator';
 export class PaginationQueryParams {
   @Type(() => Number)
   @IsInt()
-  @Min(globalProductConstants.constraints.MIN_PAGES_COUNT)
+  @Min(0)
   readonly page: number = globalProductConstants.default.DEFAULT_PAGE;
 
   @Type(() => Number)

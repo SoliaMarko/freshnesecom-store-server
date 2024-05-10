@@ -4,7 +4,7 @@ export const globalProductConstants = {
     MIN_ITEMS_PER_PAGE: 1
   },
   default: {
-    DEFAULT_PAGE: 1,
+    DEFAULT_PAGE: 0,
     DEFAULT_ITEMS_PER_PAGE: 20
   }
 };
