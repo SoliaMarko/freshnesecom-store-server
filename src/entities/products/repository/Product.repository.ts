@@ -5,5 +5,5 @@ import {GetAllProductsRepositoryType} from '@customTypes/getAllProductsRepositor
 export interface ProductRepository {
   createProduct(productDTO: CreateProductDTO): Promise<ProductResponseType>;
   getAllProducts(page: number, itemsPerPage: number): Promise<GetAllProductsRepositoryType>;
-  getSingleProduct(productID: string): Promise<ProductResponseType>;
+  getProductById(productID: string): Promise<ProductResponseType>;
 }
