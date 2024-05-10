@@ -37,6 +37,7 @@ export class ProductController {
     if (!isValid) {
       throw new HttpException(productErrorMessages.INVALID_ID, HttpStatus.BAD_REQUEST);
     }
+
     return this.productService.updateUser(productID, productDTO);
   }
 }
