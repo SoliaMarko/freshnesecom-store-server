@@ -34,6 +34,11 @@ export class MongoProductRepository implements ProductRepository {
   }
 
   async getSingleProduct(productID: string): Promise<ProductResponseType> {
+    const product = await this.productModel.findById(productID);
+    if (!product) {
+      throw new HttpException(productErrorMessages.NOT_EXIST, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
     return await this.productModel.findById(productID);
   }
 
