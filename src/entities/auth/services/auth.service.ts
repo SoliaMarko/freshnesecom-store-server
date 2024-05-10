@@ -5,7 +5,7 @@ import {InjectModel} from '@nestjs/mongoose';
 import {compare} from 'bcryptjs';
 import {Model} from 'mongoose';
 import {CreateUserDTO} from '../dto/createUser.dto';
-import {emailError, errorMessages} from '@constants/errorMessages/errorMessages.constant';
+import {emailError, errorMessages} from '@constants/errorMessages/userErrorMessages.constant';
 import {UserService} from '@entities/users/services/user.service';
 import {JwtService} from '@nestjs/jwt';
 import {UserDocument} from '@customTypes/user.type';

@@ -2,7 +2,7 @@ import {Model} from 'mongoose';
 import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {UserEntity} from '../schemas/UserEntity.schema';
-import {errorMessages} from '@constants/errorMessages/errorMessages.constant';
+import {errorMessages} from '@constants/errorMessages/userErrorMessages.constant';
 import {UserDocument, UserResponseType} from '@customTypes/user.type';
 import {JwtService} from '@nestjs/jwt';
 import {TokensResponseModel} from '../models/userResponses.model';

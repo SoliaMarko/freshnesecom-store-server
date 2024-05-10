@@ -10,7 +10,7 @@ const errorMessagesGenerator = {
   }
 };
 
-export const errorMessages = {
+export const userErrorMessages = {
   email: {
     ALREADY_REGISTERED: 'This email is already taken'
   },
@@ -31,5 +31,5 @@ export const errorMessages = {
   NOT_FOUND_BY_ID: errorMessagesGenerator.generateNotFoundMessage('id')
 };
 
-export const emailError = errorMessages.email;
-export const passwordErrorNotEnough = errorMessages.password.NOT_ENOUGH;
+export const emailError = userErrorMessages.email;
+export const passwordErrorNotEnough = userErrorMessages.password.NOT_ENOUGH;

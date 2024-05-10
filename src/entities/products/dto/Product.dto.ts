@@ -9,7 +9,7 @@ import {StartsWith} from '@validators/class-validator-exteders/startsWith/starts
 import {productValidationRules} from '@constants/validationRules/productValidationRules';
 import {productSwaggerSchema} from '@constants/swaggerConstants/products/productSwaggerSchema.constant';
 
-export class CreateProductDTO {
+export class ProductDTO {
   @IsNotEmpty()
   @Length(productValidationRules.title.MIN_LENGTH, productValidationRules.title.MAX_LENGTH)
   @ApiProperty(productSwaggerSchema.TITLE_SCHEMA)
