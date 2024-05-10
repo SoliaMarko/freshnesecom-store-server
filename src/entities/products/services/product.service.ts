@@ -1,27 +1,26 @@
-import {ProductDocument} from '@customTypes/product.type';
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
-import {Model} from 'mongoose';
-import {ProductEntity} from '../schemas/ProductEntity.schema';
+import {Injectable} from '@nestjs/common';
 import {CreateProductDTO} from '../dto/createProduct.dto';
-import {CreateProductResponseModel} from '../models/productResponses.model';
-import {productErrorMessages} from '@constants/errorMessages/productErrorMessages.constant';
+import {CreateProductResponseModel} from '../models/createProductResponse.model';
+import {MongoProductRepository} from '../repository/MongoProduct.repository';
+import {PaginatedDTO} from '../dto/pagination.dto';
+import {ProductResponseType} from '@customTypes/product.type';
 
 @Injectable()
 export class ProductService {
-  constructor(@InjectModel(ProductEntity.name) public productModel: Model<ProductDocument>) {}
+  constructor(private readonly repository: MongoProductRepository) {}
 
   async createProduct(productDTO: CreateProductDTO): Promise<CreateProductResponseModel> {
-    const product = await this.productModel.findOne({title: productDTO.title});
-    if (product) {
-      throw new HttpException(productErrorMessages.ALREADY_EXIST, HttpStatus.UNPROCESSABLE_ENTITY);
-    }
-    const newProduct = new this.productModel({...productDTO, price: productDTO.price.toFixed(2)});
-    await newProduct.save();
+    const newProduct = await this.repository.createProduct(productDTO);
 
     return {
       success: true,
       data: {product: newProduct}
     };
+  }
+
+  async getAllProducts(page: number, itemsPerPage: number): Promise<PaginatedDTO<ProductResponseType>> {
+    const {products, itemsCount} = await this.repository.getAllProducts(page, itemsPerPage);
+
+    return new PaginatedDTO<ProductResponseType>(products, page, itemsPerPage, itemsCount);
   }
 }
