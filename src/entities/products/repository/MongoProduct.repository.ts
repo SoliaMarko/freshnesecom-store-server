@@ -26,7 +26,7 @@ export class MongoProductRepository implements ProductRepository {
     const products = await this.productModel
       .find()
       .limit(itemsPerPage)
-      .skip((page - 1) * itemsPerPage)
+      .skip(page * itemsPerPage)
       .exec();
     const itemsCount = await this.productModel.countDocuments();
 

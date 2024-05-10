@@ -4,8 +4,8 @@ class PageMetaDTO {
     this.itemsPerPage = itemsPerPage;
     this.itemsCount = itemsCount;
     this.pagesCount = Math.ceil(this.itemsCount / this.itemsPerPage);
-    this.hasPreviousPage = this.page > 1;
-    this.hasNextPage = this.page < this.pagesCount;
+    this.hasPreviousPage = this.page > 0;
+    this.hasNextPage = this.page < this.pagesCount - 1;
   }
 
   readonly page: number;
