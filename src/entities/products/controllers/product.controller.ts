@@ -27,13 +27,13 @@ export class ProductController {
   }
 
   @Get(':id')
-  async getSingleProduct(@Param('id') productID: string): Promise<ProductResponseType> {
+  async getProductById(@Param('id') productID: string): Promise<ProductResponseType> {
     const isValid = Types.ObjectId.isValid(productID);
     if (!isValid) {
       throw new HttpException(productErrorMessages.INVALID_ID, HttpStatus.BAD_REQUEST);
     }
 
-    return this.productService.getSingleProduct(productID);
+    return this.productService.getProductById(productID);
   }
 
   @Put(':id')

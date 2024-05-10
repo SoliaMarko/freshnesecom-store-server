@@ -24,8 +24,8 @@ export class ProductService {
     return new PaginatedDTO<ProductResponseType>(products, page, itemsPerPage, itemsCount);
   }
 
-  async getSingleProduct(productID: string): Promise<ProductResponseType> {
-    return await this.repository.getSingleProduct(productID);
+  async getProductById(productID: string): Promise<ProductResponseType> {
+    return await this.repository.getProductById(productID);
   }
 
   async updateUser(productID: string, productDTO: ProductDTO): Promise<ProductResponseModel> {

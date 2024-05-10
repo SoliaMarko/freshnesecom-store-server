@@ -26,14 +26,14 @@ export class MongoProductRepository implements ProductRepository {
     const products = await this.productModel
       .find()
       .limit(itemsPerPage)
-      .skip((page - 1) * itemsPerPage)
+      .skip(page * itemsPerPage)
       .exec();
     const itemsCount = await this.productModel.countDocuments();
 
     return {products, itemsCount};
   }
 
-  async getSingleProduct(productID: string): Promise<ProductResponseType> {
+  async getProductById(productID: string): Promise<ProductResponseType> {
     const product = await this.productModel.findById(productID);
     if (!product) {
       throw new HttpException(productErrorMessages.NOT_EXIST, HttpStatus.UNPROCESSABLE_ENTITY);
