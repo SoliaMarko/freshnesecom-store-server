@@ -1,6 +1,6 @@
 import {ProductResponseType} from '@customTypes/product.type';
 
-export interface CreateProductResponseModel {
+export interface ProductResponseModel {
   success: boolean;
   data: {product: ProductResponseType};
 }

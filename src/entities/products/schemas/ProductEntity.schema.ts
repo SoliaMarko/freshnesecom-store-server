@@ -4,6 +4,7 @@ import {QuantityUnits} from '@enums/products/quantityUnits.enum';
 import {AdditionalDescription} from '../models/additionalDescription.model';
 import {Producer} from '../models/producer.model';
 import {productValidationRules} from '@constants/validationRules/productValidationRules';
+import {generateErrorPropNotManuallySettable} from '@constants/errorMessages/productErrorMessages.constant';
 
 @Schema()
 export class ProductEntity {
@@ -85,11 +86,11 @@ export class ProductEntity {
   }
 
   set rating(_value) {
-    throw new Error('Rating cannot be set manually');
+    throw new Error(generateErrorPropNotManuallySettable('Rating'));
   }
 
   @Prop({required: false})
-  notes: string;
+  notes?: string;
 }
 
 export const ProductEntitySchema = SchemaFactory.createForClass(ProductEntity);

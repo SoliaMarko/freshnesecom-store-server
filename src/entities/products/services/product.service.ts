@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
-import {CreateProductDTO} from '../dto/createProduct.dto';
-import {CreateProductResponseModel} from '../models/createProductResponse.model';
+import {ProductDTO} from '../dto/Product.dto';
+import {ProductResponseModel} from '../models/productResponse.model';
 import {MongoProductRepository} from '../repository/MongoProduct.repository';
 import {PaginatedDTO} from '../dto/pagination.dto';
 import {ProductResponseType} from '@customTypes/product.type';
@@ -9,7 +9,7 @@ import {ProductResponseType} from '@customTypes/product.type';
 export class ProductService {
   constructor(private readonly repository: MongoProductRepository) {}
 
-  async createProduct(productDTO: CreateProductDTO): Promise<CreateProductResponseModel> {
+  async createProduct(productDTO: ProductDTO): Promise<ProductResponseModel> {
     const newProduct = await this.repository.createProduct(productDTO);
 
     return {
@@ -26,5 +26,14 @@ export class ProductService {
 
   async getProductById(productID: string): Promise<ProductResponseType> {
     return await this.repository.getProductById(productID);
+  }
+
+  async updateUser(productID: string, productDTO: ProductDTO): Promise<ProductResponseModel> {
+    const updatedProduct = await this.repository.updateProduct(productID, productDTO);
+
+    return {
+      success: true,
+      data: {product: updatedProduct}
+    };
   }
 }

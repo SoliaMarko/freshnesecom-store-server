@@ -1,5 +1,5 @@
 import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
-import {CreateProductDTO} from '../dto/createProduct.dto';
+import {ProductDTO} from '../dto/Product.dto';
 import {ProductRepository} from './Product.repository';
 import {InjectModel} from '@nestjs/mongoose';
 import {ProductEntity} from '../schemas/ProductEntity.schema';
@@ -12,7 +12,7 @@ import {GetAllProductsRepositoryType} from '@customTypes/getAllProductsRepositor
 export class MongoProductRepository implements ProductRepository {
   constructor(@InjectModel(ProductEntity.name) public productModel: Model<ProductDocument>) {}
 
-  async createProduct(productDTO: CreateProductDTO): Promise<ProductResponseType> {
+  async createProduct(productDTO: ProductDTO): Promise<ProductResponseType> {
     const product = await this.productModel.findOne({title: productDTO.title});
     if (product) {
       throw new HttpException(productErrorMessages.ALREADY_EXIST, HttpStatus.UNPROCESSABLE_ENTITY);
@@ -40,5 +40,19 @@ export class MongoProductRepository implements ProductRepository {
     }
 
     return await this.productModel.findById(productID);
+  }
+
+  async updateProduct(productID: string, productDTO: ProductDTO): Promise<ProductResponseType> {
+    const product = await this.productModel.findById(productID);
+    if (!product) {
+      throw new HttpException(productErrorMessages.NOT_EXIST, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    const productWithSameTitle = await this.productModel.findOne({title: productDTO.title});
+    if (productWithSameTitle) {
+      throw new HttpException(productErrorMessages.ALREADY_EXIST, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    return await this.productModel.findByIdAndUpdate(productID, {...productDTO, price: productDTO.price.toFixed(2)}, {new: true});
   }
 }

@@ -1,13 +1,12 @@
 import {jwtAuthGuard} from '@guards/jwt-auth.guard';
-import {Body, Controller, Get, Param, Post, Query, UseGuards, HttpException, HttpStatus} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post, Put, Query, UseGuards} from '@nestjs/common';
 import {ProductService} from '../services/product.service';
-import {CreateProductDTO} from '../dto/createProduct.dto';
-import {CreateProductResponseModel} from '../models/createProductResponse.model';
+import {ProductDTO} from '../dto/Product.dto';
+import {ProductResponseModel} from '../models/productResponse.model';
 import {PaginatedDTO} from '../dto/pagination.dto';
 import {ProductResponseType} from '@customTypes/product.type';
 import {PaginationQueryParams} from '../models/paginationQueryParams.model';
-import {Types} from 'mongoose';
-import {productErrorMessages} from '@constants/errorMessages/productErrorMessages.constant';
+import {IdValidationPipe} from '@pipes/idValidation.pipe';
 
 @Controller('product')
 export class ProductController {
@@ -15,7 +14,7 @@ export class ProductController {
 
   @UseGuards(jwtAuthGuard)
   @Post()
-  async createProduct(@Body() productDTO: CreateProductDTO): Promise<CreateProductResponseModel> {
+  async createProduct(@Body() productDTO: ProductDTO): Promise<ProductResponseModel> {
     return this.productService.createProduct(productDTO);
   }
 
@@ -27,12 +26,12 @@ export class ProductController {
   }
 
   @Get(':id')
-  async getProductById(@Param('id') productID: string): Promise<ProductResponseType> {
-    const isValid = Types.ObjectId.isValid(productID);
-    if (!isValid) {
-      throw new HttpException(productErrorMessages.INVALID_ID, HttpStatus.BAD_REQUEST);
-    }
-
+  async getProductById(@Param('id', new IdValidationPipe()) productID: string): Promise<ProductResponseType> {
     return this.productService.getProductById(productID);
+  }
+
+  @Put(':id')
+  async updateUser(@Param('id', new IdValidationPipe()) productID: string, @Body() productDTO: ProductDTO): Promise<ProductResponseModel> {
+    return this.productService.updateUser(productID, productDTO);
   }
 }

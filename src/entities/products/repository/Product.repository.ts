@@ -1,9 +1,10 @@
 import {ProductResponseType} from '@customTypes/product.type';
-import {CreateProductDTO} from '../dto/createProduct.dto';
+import {ProductDTO} from '../dto/Product.dto';
 import {GetAllProductsRepositoryType} from '@customTypes/getAllProductsRepository.type';
 
 export interface ProductRepository {
-  createProduct(productDTO: CreateProductDTO): Promise<ProductResponseType>;
+  createProduct(productDTO: ProductDTO): Promise<ProductResponseType>;
   getAllProducts(page: number, itemsPerPage: number): Promise<GetAllProductsRepositoryType>;
   getProductById(productID: string): Promise<ProductResponseType>;
+  updateProduct(productID: string, productDTO: ProductDTO): Promise<ProductResponseType>;
 }
