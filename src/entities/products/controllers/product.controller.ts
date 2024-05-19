@@ -21,9 +21,9 @@ export class ProductController {
 
   @Get()
   async getAllProducts(@Query() paginationQueryParams: PaginationQueryParams): Promise<PaginatedDTO<ProductResponseType>> {
-    const {page, itemsPerPage} = paginationQueryParams;
+    const {page, itemsPerPage, minPrice, maxPrice} = paginationQueryParams;
 
-    return this.productService.getAllProducts(page, itemsPerPage);
+    return this.productService.getAllProducts(page, itemsPerPage, minPrice, maxPrice);
   }
 
   @Get('stats')

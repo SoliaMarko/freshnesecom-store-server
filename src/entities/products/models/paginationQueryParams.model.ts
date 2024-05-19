@@ -13,11 +13,11 @@ export class PaginationQueryParams {
   @Min(globalProductConstants.constraints.MIN_ITEMS_PER_PAGE)
   readonly itemsPerPage: number = globalProductConstants.default.DEFAULT_ITEMS_PER_PAGE;
 
-  // @Type(() => Number)
-  // readonly minPrice: number;
+  @Type(() => Number)
+  readonly minPrice: number;
 
-  // @Type(() => Number)
-  // readonly maxPrice: number;
+  @Type(() => Number)
+  readonly maxPrice: number;
 
   // @Type(() => Number)
   // @Min(0)

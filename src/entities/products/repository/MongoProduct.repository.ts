@@ -23,13 +23,21 @@ export class MongoProductRepository implements ProductRepository {
     return await newProduct.save();
   }
 
-  async getAllProducts(page: number, itemsPerPage: number): Promise<GetAllProductsRepositoryType> {
+  async getAllProducts(page: number, itemsPerPage: number, minPrice: number, maxPrice: number): Promise<GetAllProductsRepositoryType> {
+    const filters = {
+      price: {
+        $gte: minPrice,
+        $lte: maxPrice
+      }
+    };
+
     const products = await this.productModel
-      .find()
+      .find(filters)
       .limit(itemsPerPage)
       .skip(page * itemsPerPage)
       .exec();
-    const itemsCount = await this.productModel.countDocuments();
+
+    const itemsCount = await this.productModel.countDocuments(filters);
 
     return {products, itemsCount};
   }
