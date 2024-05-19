@@ -7,6 +7,7 @@ import {PaginatedDTO} from '../dto/pagination.dto';
 import {ProductResponseType} from '@customTypes/product.type';
 import {PaginationQueryParams} from '../models/paginationQueryParams.model';
 import {IdValidationPipe} from '@pipes/idValidation.pipe';
+import {ProductStatsResponseModel} from '../models/productStatsResponse.model';
 
 @Controller('product')
 export class ProductController {
@@ -23,6 +24,11 @@ export class ProductController {
     const {page, itemsPerPage} = paginationQueryParams;
 
     return this.productService.getAllProducts(page, itemsPerPage);
+  }
+
+  @Get('stats')
+  async getProductsStats(): Promise<ProductStatsResponseModel> {
+    return this.productService.getProductsStats();
   }
 
   @Get(':id')

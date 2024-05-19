@@ -4,6 +4,8 @@ import {ProductResponseModel} from '../models/productResponse.model';
 import {MongoProductRepository} from '../repository/MongoProduct.repository';
 import {PaginatedDTO} from '../dto/pagination.dto';
 import {ProductResponseType} from '@customTypes/product.type';
+import {ProductsStatsDTO} from '../dto/stats.dto';
+import {ProductStatsResponseModel} from '../models/productStatsResponse.model';
 
 @Injectable()
 export class ProductService {
@@ -22,6 +24,15 @@ export class ProductService {
     const {products, itemsCount} = await this.repository.getAllProducts(page, itemsPerPage);
 
     return new PaginatedDTO<ProductResponseType>(products, page, itemsPerPage, itemsCount);
+  }
+
+  async getProductsStats(): Promise<ProductStatsResponseModel> {
+    const {minPrice, maxPrice, quantityByCategory} = await this.repository.getProductsStats();
+
+    return {
+      success: true,
+      data: new ProductsStatsDTO(minPrice, maxPrice, quantityByCategory)
+    };
   }
 
   async getProductById(productID: string): Promise<ProductResponseType> {
