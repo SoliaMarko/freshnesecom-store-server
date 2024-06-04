@@ -3,11 +3,14 @@ import {Body, Controller, Get, Param, Post, Put, Query, UseGuards} from '@nestjs
 import {ProductService} from '../services/product.service';
 import {ProductDTO} from '../dto/Product.dto';
 import {ProductResponseModel} from '../models/productResponse.model';
-import {PaginatedDTO} from '../dto/pagination.dto';
+import {PaginatedDTO} from '../dto/products/pagination.dto';
 import {ProductResponseType} from '@customTypes/product.type';
-import {PaginationQueryParams} from '../models/paginationQueryParams.model';
+import {ProductsQueryParams} from '../models/paginationQueryParams.model';
 import {IdValidationPipe} from '@pipes/idValidation.pipe';
 import {ProductStatsResponseModel} from '../models/productStatsResponse.model';
+import {FiltersDTO} from '../dto/products/filters.dto';
+import {ProductsStatsQueryParams} from '../models/statsQueryParams.model';
+import {FiltersForStatsGettingDTO} from '../dto/stats/filtersForStatsGetting.dto';
 
 @Controller('product')
 export class ProductController {
@@ -20,15 +23,17 @@ export class ProductController {
   }
 
   @Get()
-  async getAllProducts(@Query() paginationQueryParams: PaginationQueryParams): Promise<PaginatedDTO<ProductResponseType>> {
-    const {page, itemsPerPage, minPrice, maxPrice} = paginationQueryParams;
+  async getAllProducts(@Query() productsQueryParams: ProductsQueryParams): Promise<PaginatedDTO<ProductResponseType>> {
+    const filtersDTO = new FiltersDTO(productsQueryParams);
 
-    return this.productService.getAllProducts(page, itemsPerPage, minPrice, maxPrice);
+    return this.productService.getAllProducts(filtersDTO);
   }
 
   @Get('stats')
-  async getProductsStats(): Promise<ProductStatsResponseModel> {
-    return this.productService.getProductsStats();
+  async getProductsStats(@Query() productsStatsQueryParams: ProductsStatsQueryParams): Promise<ProductStatsResponseModel> {
+    const filtersForStatsGettingDTO = new FiltersForStatsGettingDTO(productsStatsQueryParams);
+
+    return this.productService.getProductsStats(filtersForStatsGettingDTO);
   }
 
   @Get(':id')

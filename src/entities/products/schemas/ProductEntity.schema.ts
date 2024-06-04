@@ -91,6 +91,12 @@ export class ProductEntity {
 
   @Prop({required: false})
   notes?: string;
+
+  @Prop({type: Date, default: Date.now})
+  createdAt: Date;
+
+  @Prop({type: Date, default: Date.now})
+  updatedAt: Date;
 }
 
 export const ProductEntitySchema = SchemaFactory.createForClass(ProductEntity);

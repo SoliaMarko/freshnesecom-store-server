@@ -1,5 +1,5 @@
 import {productValidationRules} from '@constants/validationRules/productValidationRules';
-import {getNumericEnumValues} from '@utils/getEnumValues';
+import {getNumericEnumValues} from '@utils/enumTransformators/getNumericEnumValues';
 
 const messageGenerators = {
   generateCommon: (field: string, dataType: string) => `Product ${field}. Accept ${dataType}`,
@@ -105,11 +105,10 @@ export const productDescriptions = {
         "producer's category (is required)",
         'enum'
       ),
-      messageGenerators.generateMustHaveLengthInRange(
-        productValidationRules.producer.name.MIN_LENGTH,
-        productValidationRules.producer.name.MAX_LENGTH,
+      messageGenerators.generateMustAcceptValues(
+        getNumericEnumValues(productValidationRules.producer.name.ENUM),
         "producer's name (is required)",
-        'string'
+        'enum'
       )
     ]
       .map((message, index) => `${++index}) ${message}`)

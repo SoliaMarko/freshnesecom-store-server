@@ -7,7 +7,14 @@ import {Model} from 'mongoose';
 import {ProductDocument, ProductResponseType} from '@customTypes/product.type';
 import {productErrorMessages} from '@constants/errorMessages/productErrorMessages.constant';
 import {GetAllProductsRepositoryType} from '@customTypes/getAllProductsRepository.type';
-import {ProductsStatsDTO} from '../dto/stats.dto';
+import {ProductsStatsDTO} from '../dto/stats/stats.dto';
+import {Category} from '@enums/products/categories.enum';
+import {getNumericEnumValues} from '@utils/enumTransformators/getNumericEnumValues';
+import {getLabelByValue} from '@utils/enumTransformators/getLabelByValue';
+import {sortByOptions} from '@constants/options/sortByOptions.constant';
+import {FiltersDTO} from '../dto/products/filters.dto';
+import {Brand} from '@enums/products/brands.enum';
+import {FiltersForStatsGettingDTO} from '../dto/stats/filtersForStatsGetting.dto';
 
 @Injectable()
 export class MongoProductRepository implements ProductRepository {
@@ -23,30 +30,65 @@ export class MongoProductRepository implements ProductRepository {
     return await newProduct.save();
   }
 
-  async getAllProducts(page: number, itemsPerPage: number, minPrice: number, maxPrice: number): Promise<GetAllProductsRepositoryType> {
+  async getAllProducts(filtersDTO: FiltersDTO): Promise<GetAllProductsRepositoryType> {
+    const {page, itemsPerPage, minPrice, maxPrice, minRating, maxRating, category, brands, sortBy, order} = filtersDTO;
+    const allPossibleCategoryValues = getNumericEnumValues(Category);
+    const allPossibleBrandValues = getNumericEnumValues(Brand);
+    const brandsArray = brands
+      ?.split(',')
+      .map((brand) => Number(brand))
+      .filter((item) => item !== 0);
     const filters = {
       price: {
-        $gte: minPrice,
-        $lte: maxPrice
-      }
+        $gte: minPrice || 0,
+        $lte: maxPrice || Infinity
+      },
+      _rating: {
+        $gte: minRating || 0,
+        $lte: maxRating || Infinity
+      },
+      category: category || allPossibleCategoryValues,
+      'producer.name': brandsArray?.length ? brandsArray : allPossibleBrandValues
     };
-
+    const sortByKey = getLabelByValue(sortByOptions, sortBy);
     const products = await this.productModel
       .find(filters)
+      .sort({[sortByKey]: order})
       .limit(itemsPerPage)
       .skip(page * itemsPerPage)
       .exec();
-
     const itemsCount = await this.productModel.countDocuments(filters);
 
     return {products, itemsCount};
   }
 
-  async getProductsStats(): Promise<ProductsStatsDTO> {
+  async getProductsStats(filtersDTO: FiltersForStatsGettingDTO): Promise<ProductsStatsDTO> {
+    const {minPrice: minPriceConstraint, maxPrice: maxPriceConstraint, minRating, maxRating, brands} = filtersDTO;
+    const allPossibleBrandValues = getNumericEnumValues(Brand);
+    const brandsArray = brands
+      ?.split(',')
+      .map((brand) => Number(brand))
+      .filter((item) => item !== 0);
+
     // TODO: iterate via categories
     // const categories = getNumericEnumValues(Category);
 
     const statsPipeline = [
+      {
+        $match: {
+          price: {
+            $gte: minPriceConstraint || 0,
+            $lte: maxPriceConstraint || Infinity
+          },
+          _rating: {
+            $gte: minRating || 0,
+            $lte: maxRating || Infinity
+          },
+          'producer.name': {
+            $in: brandsArray?.length ? brandsArray : allPossibleBrandValues
+          }
+        }
+      },
       {
         $group: {
           _id: null,
@@ -102,7 +144,7 @@ export class MongoProductRepository implements ProductRepository {
       throw new HttpException(productErrorMessages.NOT_EXIST, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-    const productWithSameTitle = await this.productModel.findOne({title: productDTO.title});
+    const productWithSameTitle = await this.productModel.findOne({title: productDTO.title, _id: {$ne: productID}});
     if (productWithSameTitle) {
       throw new HttpException(productErrorMessages.ALREADY_EXIST, HttpStatus.UNPROCESSABLE_ENTITY);
     }

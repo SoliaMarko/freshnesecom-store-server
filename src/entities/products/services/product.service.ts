@@ -2,10 +2,12 @@ import {Injectable} from '@nestjs/common';
 import {ProductDTO} from '../dto/Product.dto';
 import {ProductResponseModel} from '../models/productResponse.model';
 import {MongoProductRepository} from '../repository/MongoProduct.repository';
-import {PaginatedDTO} from '../dto/pagination.dto';
+import {PaginatedDTO} from '../dto/products/pagination.dto';
 import {ProductResponseType} from '@customTypes/product.type';
-import {ProductsStatsDTO} from '../dto/stats.dto';
+import {ProductsStatsDTO} from '../dto/stats/stats.dto';
 import {ProductStatsResponseModel} from '../models/productStatsResponse.model';
+import {FiltersDTO} from '../dto/products/filters.dto';
+import {FiltersForStatsGettingDTO} from '../dto/stats/filtersForStatsGetting.dto';
 
 @Injectable()
 export class ProductService {
@@ -20,14 +22,15 @@ export class ProductService {
     };
   }
 
-  async getAllProducts(page: number, itemsPerPage: number, minPrice: number, maxPrice: number): Promise<PaginatedDTO<ProductResponseType>> {
-    const {products, itemsCount} = await this.repository.getAllProducts(page, itemsPerPage, minPrice, maxPrice);
+  async getAllProducts(filtersDTO: FiltersDTO): Promise<PaginatedDTO<ProductResponseType>> {
+    const {products, itemsCount} = await this.repository.getAllProducts(filtersDTO);
+    const {page, itemsPerPage} = filtersDTO;
 
     return new PaginatedDTO<ProductResponseType>(products, page, itemsPerPage, itemsCount);
   }
 
-  async getProductsStats(): Promise<ProductStatsResponseModel> {
-    const {minPrice, maxPrice, quantityByCategory} = await this.repository.getProductsStats();
+  async getProductsStats(filtersDTO: FiltersForStatsGettingDTO): Promise<ProductStatsResponseModel> {
+    const {minPrice, maxPrice, quantityByCategory} = await this.repository.getProductsStats(filtersDTO);
 
     return {
       success: true,

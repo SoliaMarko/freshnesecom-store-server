@@ -1,8 +1,11 @@
 import {globalProductConstants} from '@constants/global.constant';
+import {Category} from '@enums/products/categories.enum';
+import {SortBy} from '@enums/sort/sortBy.enum';
+import {Order} from '@enums/sort/order.enum';
 import {Type} from 'class-transformer';
 import {IsInt, Min} from 'class-validator';
 
-export class PaginationQueryParams {
+export class ProductsQueryParams {
   @Type(() => Number)
   @IsInt()
   @Min(0)
@@ -19,21 +22,21 @@ export class PaginationQueryParams {
   @Type(() => Number)
   readonly maxPrice: number;
 
-  // @Type(() => Number)
-  // @Min(0)
-  // @Max(5)
-  // readonly minRating: number;
+  @Type(() => Number)
+  readonly minRating: number;
 
-  // @Type(() => Number)
-  // @Min(0)
-  // @Max(5)
-  // readonly maxRating: number;
+  @Type(() => Number)
+  readonly maxRating: number;
 
-  // readonly brand: string;
+  @Type(() => Number)
+  readonly category: Category;
 
-  // readonly category: string;
+  @Type(() => String)
+  readonly brands: string;
 
-  // readonly sortBy: string;
-  // available options: ['title', 'rating', 'price', 'quantity']
-  // asc => default OR desc
+  @Type(() => Number)
+  readonly sortBy: SortBy;
+
+  @Type(() => Number)
+  readonly order: Order;
 }

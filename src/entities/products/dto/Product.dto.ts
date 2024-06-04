@@ -93,12 +93,7 @@ export class ProductDTO {
 
   @IsOptional()
   @HasValid({property: 'category', enums: productValidationRules.producer.category.ENUM})
-  @HasValidLength({
-    property: 'name',
-    min: productValidationRules.producer.name.MIN_LENGTH,
-    max: productValidationRules.producer.name.MAX_LENGTH,
-    optional: false
-  })
+  @HasValid({property: 'name', enums: productValidationRules.producer.name.ENUM})
   @ApiProperty(productSwaggerSchema.PRODUCER_SCHEMA)
   readonly producer?: Producer;
 
