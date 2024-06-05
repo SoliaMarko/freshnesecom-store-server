@@ -69,10 +69,8 @@ export class MongoProductRepository implements ProductRepository {
       ?.split(',')
       .map((brand) => Number(brand))
       .filter((item) => item !== 0);
-
-    // TODO: iterate via categories
-    // const categories = getNumericEnumValues(Category);
-
+    const categories = getNumericEnumValues(Category);
+    const quantityByCategoryArr = categories.map((category) => ({category: category, items: `$category${category}`}));
     const statsPipeline = [
       {
         $match: {
@@ -114,7 +112,7 @@ export class MongoProductRepository implements ProductRepository {
     ];
 
     categories.forEach((category) => {
-      statsPipeline[0].$group[`category${category}`] = {
+      statsPipeline[1].$group[`category${category}`] = {
         $sum: {
           $cond: [{$eq: ['$category', category]}, 1, 0]
         }
