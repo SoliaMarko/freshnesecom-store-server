@@ -5,6 +5,7 @@ import {UserService} from './services/user.service';
 import {UserEntity, UserEntitySchema} from './schemas/UserEntity.schema';
 import {JwtModule} from '@nestjs/jwt';
 import {ConfigModule, ConfigService} from '@nestjs/config';
+import {MongoUserRepository} from './repository/MongoUser.repository';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import {ConfigModule, ConfigService} from '@nestjs/config';
     })
   ],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, MongoUserRepository],
   exports: [UserService]
 })
 export class UserModule {}
