@@ -1,5 +1,7 @@
+import {QuantityByCategoryType} from '@customTypes/quantityByCategory.type';
+
 export class ProductsStatsDTO {
-  constructor(minPrice: number, maxPrice: number, quantityByCategory: {category: number; quantity: number}[]) {
+  constructor(minPrice: number, maxPrice: number, quantityByCategory: QuantityByCategoryType[]) {
     this.minPrice = minPrice;
     this.maxPrice = maxPrice;
     this.quantityByCategory = [...quantityByCategory];
@@ -7,5 +9,5 @@ export class ProductsStatsDTO {
 
   readonly minPrice: number;
   readonly maxPrice: number;
-  readonly quantityByCategory: {category: number; quantity: number}[];
+  readonly quantityByCategory: QuantityByCategoryType[];
 }
