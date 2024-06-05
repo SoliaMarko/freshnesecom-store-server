@@ -7,6 +7,9 @@ import {Model} from 'mongoose';
 import {ProductDocument, ProductResponseType} from '@customTypes/product.type';
 import {productErrorMessages} from '@constants/errorMessages/productErrorMessages.constant';
 import {GetAllProductsRepositoryType} from '@customTypes/getAllProductsRepository.type';
+import {ProductsStatsDTO} from '../dto/stats.dto';
+import {getNumericEnumValues} from '@utils/getEnumValues';
+import {Category} from '@enums/products/categories.enum';
 
 @Injectable()
 export class MongoProductRepository implements ProductRepository {
@@ -31,6 +34,48 @@ export class MongoProductRepository implements ProductRepository {
     const itemsCount = await this.productModel.countDocuments();
 
     return {products, itemsCount};
+  }
+
+  async getProductsStats(): Promise<ProductsStatsDTO> {
+    const categories = getNumericEnumValues(Category);
+    const quantityByCategoryArr = categories.map((category) => ({category: category, items: `$category${category}`}));
+    const statsPipeline = [
+      {
+        $group: {
+          _id: null,
+          minPrice: {
+            $min: {
+              $multiply: ['$price', {$subtract: [1, {$divide: ['$discount', 100]}]}]
+            }
+          },
+          maxPrice: {
+            $max: {
+              $multiply: ['$price', {$subtract: [1, {$divide: ['$discount', 100]}]}]
+            }
+          }
+        }
+      },
+      {
+        $project: {
+          minPrice: 1,
+          maxPrice: 1,
+          quantityByCategory: quantityByCategoryArr
+        }
+      }
+    ];
+
+    categories.forEach((category) => {
+      statsPipeline[0].$group[`category${category}`] = {
+        $sum: {
+          $cond: [{$eq: ['$category', category]}, 1, 0]
+        }
+      };
+    });
+
+    const statsAggregation = await this.productModel.aggregate(statsPipeline).then((result) => result[0]);
+    const {minPrice, maxPrice, quantityByCategory} = statsAggregation;
+
+    return {minPrice, maxPrice, quantityByCategory};
   }
 
   async getProductById(productID: string): Promise<ProductResponseType> {
