@@ -8,6 +8,8 @@ import {ProductDocument, ProductResponseType} from '@customTypes/product.type';
 import {productErrorMessages} from '@constants/errorMessages/productErrorMessages.constant';
 import {GetAllProductsRepositoryType} from '@customTypes/getAllProductsRepository.type';
 import {ProductsStatsDTO} from '../dto/stats.dto';
+import {getNumericEnumValues} from '@utils/getEnumValues';
+import {Category} from '@enums/products/categories.enum';
 
 @Injectable()
 export class MongoProductRepository implements ProductRepository {
@@ -35,9 +37,8 @@ export class MongoProductRepository implements ProductRepository {
   }
 
   async getProductsStats(): Promise<ProductsStatsDTO> {
-    // TODO: iterate via categories
-    // const categories = getNumericEnumValues(Category);
-
+    const categories = getNumericEnumValues(Category);
+    const quantityByCategoryArr = categories.map((category) => ({category: category, items: `$category${category}`}));
     const statsPipeline = [
       {
         $group: {
@@ -51,28 +52,26 @@ export class MongoProductRepository implements ProductRepository {
             $max: {
               $multiply: ['$price', {$subtract: [1, {$divide: ['$discount', 100]}]}]
             }
-          },
-          category1: {$sum: {$cond: [{$eq: ['$category', 1]}, 1, 0]}},
-          category2: {$sum: {$cond: [{$eq: ['$category', 2]}, 1, 0]}},
-          category3: {$sum: {$cond: [{$eq: ['$category', 3]}, 1, 0]}},
-          category4: {$sum: {$cond: [{$eq: ['$category', 4]}, 1, 0]}},
-          category5: {$sum: {$cond: [{$eq: ['$category', 5]}, 1, 0]}}
+          }
         }
       },
       {
         $project: {
           minPrice: 1,
           maxPrice: 1,
-          quantityByCategory: [
-            {category: 1, items: '$category1'},
-            {category: 2, items: '$category2'},
-            {category: 3, items: '$category3'},
-            {category: 4, items: '$category4'},
-            {category: 5, items: '$category5'}
-          ]
+          quantityByCategory: quantityByCategoryArr
         }
       }
     ];
+
+    categories.forEach((category) => {
+      statsPipeline[0].$group[`category${category}`] = {
+        $sum: {
+          $cond: [{$eq: ['$category', category]}, 1, 0]
+        }
+      };
+    });
+
     const statsAggregation = await this.productModel.aggregate(statsPipeline).then((result) => result[0]);
     const {minPrice, maxPrice, quantityByCategory} = statsAggregation;
 

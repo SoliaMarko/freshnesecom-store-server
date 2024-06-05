@@ -12,28 +12,4 @@ export class PaginationQueryParams {
   @IsInt()
   @Min(globalProductConstants.constraints.MIN_ITEMS_PER_PAGE)
   readonly itemsPerPage: number = globalProductConstants.default.DEFAULT_ITEMS_PER_PAGE;
-
-  // @Type(() => Number)
-  // readonly minPrice: number;
-
-  // @Type(() => Number)
-  // readonly maxPrice: number;
-
-  // @Type(() => Number)
-  // @Min(0)
-  // @Max(5)
-  // readonly minRating: number;
-
-  // @Type(() => Number)
-  // @Min(0)
-  // @Max(5)
-  // readonly maxRating: number;
-
-  // readonly brand: string;
-
-  // readonly category: string;
-
-  // readonly sortBy: string;
-  // available options: ['title', 'rating', 'price', 'quantity']
-  // asc => default OR desc
 }

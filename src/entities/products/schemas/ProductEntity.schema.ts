@@ -78,7 +78,7 @@ export class ProductEntity {
   @Prop({required: false})
   colors?: string[];
 
-  @Prop({required: false, min: productValidationRules.rating.MIN_VALUE, max: productValidationRules.rating.MAX_VALUE, default: 3.5})
+  @Prop({required: false, min: productValidationRules.rating.MIN_VALUE, max: productValidationRules.rating.MAX_VALUE, default: 0})
   _rating?: number;
 
   get rating() {
