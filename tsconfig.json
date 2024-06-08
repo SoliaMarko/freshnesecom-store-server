@@ -14,7 +14,7 @@
       "@config/*": ["./config/*"],
       "@constants/*": ["./constants/*"],
       "@customTypes/*": ["./customTypes/*"],
-      "@docs/*": ["./docs/*"],
+      "@decorators/*": ["./decorators/*"],
       "@entities/*": ["./entities/*"],
       "@enums/*": ["./enums/*"],
       "@filters/*": ["./filters/*"],

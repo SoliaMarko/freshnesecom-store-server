@@ -16,6 +16,8 @@ export class MongoUserRepository implements UserRepository {
     const user = await this.userModel.findOne({email}).select('+password');
     if (user) return user;
 
+    console.log('user', user);
+
     throw new HttpException(errorMessages.NOT_FOUND_BY_EMAIL, HttpStatus.UNPROCESSABLE_ENTITY);
   }
 

@@ -53,7 +53,8 @@ export class UserService {
       firstName: userEntity.firstName,
       lastName: userEntity.lastName,
       email: userEntity.email,
-      phoneNumber: userEntity.phoneNumber
+      phoneNumber: userEntity.phoneNumber,
+      wishlist: userEntity.wishlist
     };
   }
 
