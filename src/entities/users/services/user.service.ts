@@ -4,6 +4,7 @@ import {UserDocument, UserResponseType} from '@customTypes/user.type';
 import {JwtService} from '@nestjs/jwt';
 import {TokensResponseModel} from '../models/userResponses.model';
 import {MongoUserRepository} from '../repository/MongoUser.repository';
+import {UpdateWishlistDTO} from '../dto/updateWishlist.dto';
 
 @Injectable()
 export class UserService {
@@ -53,6 +54,17 @@ export class UserService {
       lastName: userEntity.lastName,
       email: userEntity.email,
       phoneNumber: userEntity.phoneNumber
+    };
+  }
+
+  async updateWishlist(user: UserDocument, updateWishlistDTO: UpdateWishlistDTO) {
+    const {action, productID} = updateWishlistDTO;
+    await this.repository.updateWishlist(user, updateWishlistDTO);
+
+    return {
+      success: true,
+      action,
+      productID
     };
   }
 }

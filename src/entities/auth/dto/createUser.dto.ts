@@ -1,33 +1,35 @@
 import {ApiProperty} from '@nestjs/swagger';
 import {IsEmail, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, Length} from 'class-validator';
-import {descriptions} from '@constants/swaggerConstants/userEntitiesDescriptions.constant';
+import {descriptions} from '@constants/swaggerConstants/users/userEntities/userEntitiesDescriptions.constant';
+import {examples} from '@constants/swaggerConstants/users/userEntities/userEntitiesExamples.constant';
+import {firstNameValidationRules, lastNameValidationRules} from '@constants/validationRules/validationRules.constant';
 
 export class CreateUserDTO {
   @IsNotEmpty()
   @IsString()
-  @Length(2, 30)
-  @ApiProperty({description: descriptions.FIRST_NAME_DESCRIPTION, example: 'Winston', required: true})
+  @Length(firstNameValidationRules.MIN_LENGTH, firstNameValidationRules.MAX_LENGTH)
+  @ApiProperty({description: descriptions.FIRST_NAME_DESCRIPTION, example: examples.FIRST_NAME_EXAMPLE, required: true})
   readonly firstName: string;
 
   @IsNotEmpty()
   @IsString()
-  @Length(2, 50)
-  @ApiProperty({description: descriptions.LAST_NAME_DESCRIPTION, example: 'Smith', required: true})
+  @Length(lastNameValidationRules.MIN_LENGTH, lastNameValidationRules.MAX_LENGTH)
+  @ApiProperty({description: descriptions.LAST_NAME_DESCRIPTION, example: examples.LAST_NAME_EXAMPLE, required: true})
   readonly lastName: string;
 
   @IsNotEmpty()
   @IsEmail()
-  @ApiProperty({description: descriptions.EMAIL_DESCRIPTION, example: 'winstonsmith@mail.com', required: true})
+  @ApiProperty({description: descriptions.EMAIL_DESCRIPTION, example: examples.EMAIL_EXAMPLE, required: true})
   readonly email: string;
 
   @IsNotEmpty()
   @IsString()
-  @ApiProperty({description: descriptions.PASSWORD_DESCRIPTION, example: 'bH6)jJ_2', required: true})
+  @ApiProperty({description: descriptions.PASSWORD_DESCRIPTION, example: examples.PASSWORD_EXAMPLE, required: true})
   readonly password: string;
 
   @IsOptional()
   @IsPhoneNumber()
   @IsString()
-  @ApiProperty({description: descriptions.PHONE_NUMBER_DESCRIPTION, example: '+380994321510', required: false})
+  @ApiProperty({description: descriptions.PHONE_NUMBER_DESCRIPTION, example: examples.PHONE_NUMBER_EXAMPLE, required: false})
   readonly phoneNumber?: string;
 }

@@ -11,6 +11,7 @@ import {ProductStatsResponseModel} from '../models/productStatsResponse.model';
 import {FiltersDTO} from '../dto/products/filters.dto';
 import {ProductsStatsQueryParams} from '../models/statsQueryParams.model';
 import {FiltersForStatsGettingDTO} from '../dto/stats/filtersForStatsGetting.dto';
+import {ApiProducts} from 'decorators/swagger/products/apiProducts.decorator';
 
 @Controller('product')
 export class ProductController {
@@ -18,11 +19,13 @@ export class ProductController {
 
   @UseGuards(jwtAuthGuard)
   @Post()
+  @ApiProducts()
   async createProduct(@Body() productDTO: ProductDTO): Promise<ProductResponseModel> {
     return this.productService.createProduct(productDTO);
   }
 
   @Get()
+  @ApiProducts()
   async getAllProducts(@Query() productsQueryParams: ProductsQueryParams): Promise<PaginatedDTO<ProductResponseType>> {
     const filtersDTO = new FiltersDTO(productsQueryParams);
 
@@ -30,6 +33,7 @@ export class ProductController {
   }
 
   @Get('stats')
+  @ApiProducts()
   async getProductsStats(@Query() productsStatsQueryParams: ProductsStatsQueryParams): Promise<ProductStatsResponseModel> {
     const filtersForStatsGettingDTO = new FiltersForStatsGettingDTO(productsStatsQueryParams);
 
@@ -37,11 +41,13 @@ export class ProductController {
   }
 
   @Get(':id')
+  @ApiProducts()
   async getProductById(@Param('id', new IdValidationPipe()) productID: string): Promise<ProductResponseType> {
     return this.productService.getProductById(productID);
   }
 
   @Put(':id')
+  @ApiProducts()
   async updateUser(@Param('id', new IdValidationPipe()) productID: string, @Body() productDTO: ProductDTO): Promise<ProductResponseModel> {
     return this.productService.updateUser(productID, productDTO);
   }

@@ -5,6 +5,8 @@ import {UserRepository} from './User.repository';
 import {UserDocument} from '@customTypes/user.type';
 import {UserEntity} from '../schemas/UserEntity.schema';
 import {errorMessages} from '@constants/errorMessages/errorMessages.constant';
+import {UpdateWishlistDTO} from '../dto/updateWishlist.dto';
+import {WishlistAction} from '@enums/user/wishlistActions.enum';
 
 @Injectable()
 export class MongoUserRepository implements UserRepository {
@@ -37,5 +39,31 @@ export class MongoUserRepository implements UserRepository {
 
   async clearTokens(user: UserDocument): Promise<void> {
     await this.userModel.updateOne({email: user.email}, {$unset: {accessToken: '', refreshToken: ''}});
+  }
+
+  async updateWishlist(user: UserDocument, updateWishlistDTO: UpdateWishlistDTO) {
+    const {action, productID} = updateWishlistDTO;
+
+    const isProductIncludedInWishlist = await this.userModel.findOne({
+      email: user.email,
+      wishlist: productID
+    });
+
+    if (isProductIncludedInWishlist && action === WishlistAction.add) return;
+
+    if (action === WishlistAction.add) {
+      await this.userModel.updateOne(
+        {email: user.email},
+        {
+          $addToSet: {
+            wishlist: productID
+          }
+        }
+      );
+    }
+
+    if (action === WishlistAction.remove) {
+      await this.userModel.updateOne({email: user.email}, {$pull: {wishlist: productID}});
+    }
   }
 }

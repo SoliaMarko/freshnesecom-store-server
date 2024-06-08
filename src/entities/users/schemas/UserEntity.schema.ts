@@ -1,6 +1,7 @@
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 import {hashPassword} from '@utils/bcrypt';
 import {NextFunction} from 'interfaces/nextFunction.interface';
+import {Types} from 'mongoose';
 
 @Schema()
 export class UserEntity {
@@ -24,6 +25,9 @@ export class UserEntity {
 
   @Prop({required: false})
   refreshToken?: string;
+
+  @Prop({required: false})
+  wishlist?: Types.ObjectId[];
 }
 
 export const UserEntitySchema = SchemaFactory.createForClass(UserEntity);
