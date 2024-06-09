@@ -1,4 +1,4 @@
-import {getNumericEnumValues} from '@utils/getEnumValues';
+import {getNumericEnumValues} from '@utils/enumTransformators/getNumericEnumValues';
 import {ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface} from 'class-validator';
 
 export interface HasValidConstraintInput {

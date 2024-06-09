@@ -1,3 +1,4 @@
+import {Brand} from '@enums/products/brands.enum';
 import {Category} from '@enums/products/categories.enum';
 import {Freshness} from '@enums/products/freshness.enum';
 import {ProducerCategory} from '@enums/products/producerCategories.enum';
@@ -59,8 +60,7 @@ export const productValidationRules = {
       ENUM: ProducerCategory
     },
     name: {
-      MIN_LENGTH: 2,
-      MAX_LENGTH: 60
+      ENUM: Brand
     }
   },
   deliveryLocation: {
