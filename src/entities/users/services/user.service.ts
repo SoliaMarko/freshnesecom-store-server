@@ -28,7 +28,6 @@ export class UserService {
   async getCurrentUser(accessToken: string): Promise<UserResponseType> {
     const {email} = this.jwtService.verify(accessToken);
     const user = await this.findByEmail(email);
-    console.log('user found by email', user);
 
     return this.buildUserResponse(user);
   }
