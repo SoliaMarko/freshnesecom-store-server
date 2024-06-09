@@ -1,8 +1,8 @@
 import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 import {Freshness} from '@enums/products/freshness.enum';
 import {QuantityUnits} from '@enums/products/quantityUnits.enum';
-import {AdditionalDescription} from '../models/additionalDescription.model';
-import {Producer} from '../models/producer.model';
+import {AdditionalDescription} from '../models/properties/additionalDescription.model';
+import {Producer} from '../models/properties/producer.model';
 import {productValidationRules} from '@constants/validationRules/productValidationRules';
 import {generateErrorPropNotManuallySettable} from '@constants/errorMessages/productErrorMessages.constant';
 

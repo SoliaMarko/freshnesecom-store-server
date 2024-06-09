@@ -1,4 +1,4 @@
-import {JwtPayloadModel} from '@entities/auth/models/jwtPayload.model';
+import {JwtPayloadModel} from '@entities/auth/models/payloads/jwtPayload.model';
 import {UserEntity} from '@entities/users/schemas/UserEntity.schema';
 import {UserService} from '@entities/users/services/user.service';
 import {ExtendedRequest} from '@interfaces/extendedRequest.interface';

@@ -1,4 +1,4 @@
-import {ProductsStatsDTO} from '../dto/stats/stats.dto';
+import {ProductsStatsDTO} from '../../dto/stats/stats.dto';
 
 export interface ProductStatsResponseModel {
   success: boolean;

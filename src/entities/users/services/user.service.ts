@@ -1,8 +1,8 @@
 import {Injectable} from '@nestjs/common';
 import {UserEntity} from '../schemas/UserEntity.schema';
-import {UserDocument, UserResponseType} from '@customTypes/user.type';
+import {UserDocument, UserResponseType} from '@customTypes/user/user.type';
 import {JwtService} from '@nestjs/jwt';
-import {TokensResponseModel} from '../models/userResponses.model';
+import {TokensResponseModel} from '../models/responses/userResponses.model';
 import {MongoUserRepository} from '../repository/MongoUser.repository';
 import {UpdateWishlistDTO} from '../dto/updateWishlist.dto';
 
@@ -23,6 +23,14 @@ export class UserService {
     const user = await this.repository.findById(id);
 
     return user;
+  }
+
+  async getCurrentUser(accessToken: string): Promise<UserResponseType> {
+    const {email} = this.jwtService.verify(accessToken);
+    const user = await this.findByEmail(email);
+    console.log('user found by email', user);
+
+    return this.buildUserResponse(user);
   }
 
   async getRefreshTokenById(id: string): Promise<string> {
@@ -48,6 +56,17 @@ export class UserService {
     await this.repository.clearTokens(user);
   }
 
+  async updateWishlist(user: UserResponseType, updateWishlistDTO: UpdateWishlistDTO) {
+    const {action, productIDs} = updateWishlistDTO;
+    await this.repository.updateWishlist(user, updateWishlistDTO);
+
+    return {
+      success: true,
+      action,
+      productIDs
+    };
+  }
+
   buildUserResponse(userEntity: UserEntity): UserResponseType {
     return {
       firstName: userEntity.firstName,
@@ -55,17 +74,6 @@ export class UserService {
       email: userEntity.email,
       phoneNumber: userEntity.phoneNumber,
       wishlist: userEntity.wishlist
-    };
-  }
-
-  async updateWishlist(user: UserDocument, updateWishlistDTO: UpdateWishlistDTO) {
-    const {action, productID} = updateWishlistDTO;
-    await this.repository.updateWishlist(user, updateWishlistDTO);
-
-    return {
-      success: true,
-      action,
-      productID
     };
   }
 }

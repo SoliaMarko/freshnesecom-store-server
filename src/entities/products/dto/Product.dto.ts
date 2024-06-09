@@ -1,7 +1,7 @@
 import {ApiProperty} from '@nestjs/swagger';
 import {ArrayMaxSize, ArrayMinSize, ArrayUnique, IsBoolean, IsEnum, IsInt, IsNotEmpty, IsOptional, Length, Max, Min} from 'class-validator';
-import {AdditionalDescription} from '../models/additionalDescription.model';
-import {Producer} from '../models/producer.model';
+import {AdditionalDescription} from '../models/properties/additionalDescription.model';
+import {Producer} from '../models/properties/producer.model';
 import {ValidateEachInArrayHas} from '@validators/class-validator-exteders/validateEachInArrayHas/validateEachInArrayHas';
 import {HasValid} from '@validators/class-validator-exteders/hasValid/hasValid';
 import {HasValidLength} from '@validators/class-validator-exteders/hasValidLength/hasValidLength';

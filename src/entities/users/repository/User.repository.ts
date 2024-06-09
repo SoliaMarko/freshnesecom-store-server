@@ -1,4 +1,4 @@
-import {UserDocument} from '@customTypes/user.type';
+import {UserDocument} from '@customTypes/user/user.type';
 
 export interface UserRepository {
   findByEmail(email: string): Promise<UserDocument>;

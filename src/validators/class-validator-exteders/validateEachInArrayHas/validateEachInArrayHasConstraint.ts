@@ -1,4 +1,4 @@
-import {AdditionalDescription} from '@entities/products/models/additionalDescription.model';
+import {AdditionalDescription} from '@entities/products/models/properties/additionalDescription.model';
 import {ValidationArguments, ValidatorConstraint, ValidatorConstraintInterface} from 'class-validator';
 
 export interface ValidateEachInArrayHasConstraintInput {

@@ -12,7 +12,7 @@ export class UpdateWishlistDTO {
   readonly action: WishlistAction;
 
   @IsNotEmpty()
-  @IsMongoId()
+  @IsMongoId({each: true})
   @ApiProperty({description: descriptions.WISHLIST_ITEM_DESCRIPTION, example: examples.WISHLIST_ITEM_DESCRIPTION, required: true})
-  readonly productID: Types.ObjectId;
+  readonly productIDs: Types.ObjectId[];
 }
