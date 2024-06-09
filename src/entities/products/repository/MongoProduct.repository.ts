@@ -24,7 +24,7 @@ export class MongoProductRepository implements ProductRepository {
   async createProduct(productDTO: ProductDTO): Promise<ProductResponseType> {
     const product = await this.productModel.findOne({title: productDTO.title});
     if (product) {
-      throw new HttpException(productErrorMessages.ALREADY_EXIST, HttpStatus.UNPROCESSABLE_ENTITY);
+      throw new HttpException(productErrorMessages.ALREADY_EXISTED_TITLE, HttpStatus.UNPROCESSABLE_ENTITY);
     }
     const newProduct = new this.productModel({...productDTO, price: productDTO.price.toFixed(2)});
 
@@ -63,13 +63,13 @@ export class MongoProductRepository implements ProductRepository {
     return {products, itemsCount};
   }
 
-  async getProductsStats(filtersDTO: FiltersForStatsGettingDTO): Promise<ProductsStatsDTO> {
+  async getProductsStats(filtersDTO: FiltersForStatsGettingDTO): Promise<ProductsStatsDTO | undefined> {
     const {minPrice: minPriceConstraint, maxPrice: maxPriceConstraint, minRating, maxRating, brands} = filtersDTO;
     const allPossibleBrandValues = getNumericEnumValues(Brand);
     const brandsArray = brands
       ?.split(',')
       .map((brand) => Number(brand))
-      .filter((item) => item !== 0);
+      .filter((brand) => brand !== 0);
     const categories = getNumericEnumValues(Category);
     const quantityByCategoryArr = categories.map((category) => ({category: category, items: `$category${category}`}));
     const statsPipeline = [
@@ -121,6 +121,11 @@ export class MongoProductRepository implements ProductRepository {
     });
 
     const statsAggregation = await this.productModel.aggregate(statsPipeline).then((result) => result[0]);
+
+    if (!statsAggregation) {
+      throw new HttpException(productErrorMessages.NOT_FOUND_BY_PARAMS, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
     const {minPrice, maxPrice, quantityByCategory} = statsAggregation;
 
     return {minPrice, maxPrice, quantityByCategory};
@@ -146,7 +151,7 @@ export class MongoProductRepository implements ProductRepository {
   async getProductById(productID: string): Promise<ProductResponseType> {
     const product = await this.productModel.findById(productID);
     if (!product) {
-      throw new HttpException(productErrorMessages.NOT_EXIST, HttpStatus.UNPROCESSABLE_ENTITY);
+      throw new HttpException(productErrorMessages.NOT_EXIST_WITH_ID, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     return await this.productModel.findById(productID);
@@ -155,12 +160,12 @@ export class MongoProductRepository implements ProductRepository {
   async updateProduct(productID: string, productDTO: ProductDTO): Promise<ProductResponseType> {
     const product = await this.productModel.findById(productID);
     if (!product) {
-      throw new HttpException(productErrorMessages.NOT_EXIST, HttpStatus.UNPROCESSABLE_ENTITY);
+      throw new HttpException(productErrorMessages.NOT_EXIST_WITH_ID, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     const productWithSameTitle = await this.productModel.findOne({title: productDTO.title, _id: {$ne: productID}});
     if (productWithSameTitle) {
-      throw new HttpException(productErrorMessages.ALREADY_EXIST, HttpStatus.UNPROCESSABLE_ENTITY);
+      throw new HttpException(productErrorMessages.ALREADY_EXISTED_TITLE, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     return await this.productModel.findByIdAndUpdate(productID, {...productDTO, price: productDTO.price.toFixed(2)}, {new: true});
