@@ -2,7 +2,7 @@ import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {InjectModel} from '@nestjs/mongoose';
 import {Model} from 'mongoose';
 import {UserRepository} from './User.repository';
-import {UserDocument} from '@customTypes/user.type';
+import {UserDocument, UserResponseType} from '@customTypes/user.type';
 import {UserEntity} from '../schemas/UserEntity.schema';
 import {errorMessages} from '@constants/errorMessages/errorMessages.constant';
 import {UpdateWishlistDTO} from '../dto/updateWishlist.dto';
@@ -15,8 +15,6 @@ export class MongoUserRepository implements UserRepository {
   async findByEmail(email: string): Promise<UserDocument> {
     const user = await this.userModel.findOne({email}).select('+password');
     if (user) return user;
-
-    console.log('user', user);
 
     throw new HttpException(errorMessages.NOT_FOUND_BY_EMAIL, HttpStatus.UNPROCESSABLE_ENTITY);
   }
@@ -43,29 +41,31 @@ export class MongoUserRepository implements UserRepository {
     await this.userModel.updateOne({email: user.email}, {$unset: {accessToken: '', refreshToken: ''}});
   }
 
-  async updateWishlist(user: UserDocument, updateWishlistDTO: UpdateWishlistDTO) {
-    const {action, productID} = updateWishlistDTO;
+  async updateWishlist(user: UserResponseType, updateWishlistDTO: UpdateWishlistDTO) {
+    const {action, productIDs} = updateWishlistDTO;
 
-    const isProductIncludedInWishlist = await this.userModel.findOne({
-      email: user.email,
-      wishlist: productID
-    });
+    productIDs.forEach(async (productID) => {
+      const isProductIncludedInWishlist = await this.userModel.findOne({
+        email: user.email,
+        wishlist: productID
+      });
 
-    if (isProductIncludedInWishlist && action === WishlistAction.add) return;
+      if (isProductIncludedInWishlist && action === WishlistAction.add) return;
 
-    if (action === WishlistAction.add) {
-      await this.userModel.updateOne(
-        {email: user.email},
-        {
-          $addToSet: {
-            wishlist: productID
+      if (action === WishlistAction.add) {
+        await this.userModel.updateOne(
+          {email: user.email},
+          {
+            $addToSet: {
+              wishlist: productID
+            }
           }
-        }
-      );
-    }
+        );
+      }
 
-    if (action === WishlistAction.remove) {
-      await this.userModel.updateOne({email: user.email}, {$pull: {wishlist: productID}});
-    }
+      if (action === WishlistAction.remove) {
+        await this.userModel.updateOne({email: user.email}, {$pull: {wishlist: productID}});
+      }
+    });
   }
 }

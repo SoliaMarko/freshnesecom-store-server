@@ -8,11 +8,11 @@ import {Types} from 'mongoose';
 
 export class UpdateWishlistDTO {
   @IsEnum(updateWishlistValidationRules.action.ENUM)
-  @ApiProperty({description: descriptions.ACTION, example: examples.ACTION, required: true})
+  @ApiProperty({description: descriptions.ACTION_DESCRIPTION, example: examples.ACTION_EXAMPLE, required: true})
   readonly action: WishlistAction;
 
   @IsNotEmpty()
-  @IsMongoId()
-  @ApiProperty({description: descriptions.WISHLIST_ITEM_DESCRIPTION, example: examples.WISHLIST_ITEM_DESCRIPTION, required: true})
-  readonly productID: Types.ObjectId;
+  @IsMongoId({each: true})
+  @ApiProperty({description: descriptions.WISHLIST_ITEM_DESCRIPTION, example: examples.WISHLIST_ITEM_EXAMPLE, required: true})
+  readonly productIDs: Types.ObjectId[];
 }

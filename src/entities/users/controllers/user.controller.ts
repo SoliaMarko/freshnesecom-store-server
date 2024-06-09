@@ -19,10 +19,8 @@ export class UserController {
   @ApiUser()
   async getCurrentUser(@Request() request: ExtendedRequest): Promise<UserResponseType> {
     const accessToken = request.get('authorization').split(' ')[1];
-    const {email} = this.jwtService.verify(accessToken);
-    const user = await this.userService.findByEmail(email);
 
-    return this.userService.buildUserResponse(user);
+    return this.userService.getCurrentUser(accessToken);
   }
 
   @UseGuards(jwtAuthGuard)
@@ -30,8 +28,7 @@ export class UserController {
   @ApiUser()
   async updateWishlist(@Request() request: ExtendedRequest, @Body() updateWishlistDTO: UpdateWishlistDTO) {
     const accessToken = request.get('authorization').split(' ')[1];
-    const {email} = this.jwtService.verify(accessToken);
-    const user = await this.userService.findByEmail(email);
+    const user = await this.userService.getCurrentUser(accessToken);
 
     return this.userService.updateWishlist(user, updateWishlistDTO);
   }
