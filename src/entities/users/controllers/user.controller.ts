@@ -2,10 +2,10 @@ import {Body, Controller, Get, Patch, Request, UseGuards, Query} from '@nestjs/c
 import {UserService} from '../services/user.service';
 import {UserResponseType} from '@customTypes/user/user.type';
 import {jwtAuthGuard} from '@guards/jwt-auth.guard';
-import {JwtService} from '@nestjs/jwt';
 import {ExtendedRequest} from '@interfaces/extendedRequest.interface';
 import {UpdateWishlistDTO} from '../dto/updateWishlist.dto';
 import {ApiUser} from 'decorators/swagger/user/apiUser.decorator';
+import {UpdateWishlistResponse} from '../models/updateWishlistResponse.model';
 import {PaginatedDTO} from '@entities/products/dto/products/pagination.dto';
 import {ProductResponseType} from '@customTypes/products/product.type';
 import {PaginationQueryParams} from '@entities/products/models/queryParams/paginationQueryParams.model';
@@ -14,7 +14,6 @@ import {ProductService} from '@entities/products/services/product.service';
 @Controller('user')
 export class UserController {
   constructor(
-    private readonly jwtService: JwtService,
     private readonly userService: UserService,
     public readonly productService: ProductService
   ) {}
@@ -29,13 +28,23 @@ export class UserController {
   }
 
   @UseGuards(jwtAuthGuard)
-  @Patch('wishlist')
+  @Patch('wishlist/add')
   @ApiUser()
-  async updateWishlist(@Request() request: ExtendedRequest, @Body() updateWishlistDTO: UpdateWishlistDTO) {
+  async addToWishlist(@Request() request: ExtendedRequest, @Body() updateWishlistDTO: UpdateWishlistDTO): Promise<UpdateWishlistResponse> {
     const accessToken = request.get('authorization').split(' ')[1];
     const user = await this.userService.getCurrentUser(accessToken);
 
-    return this.userService.updateWishlist(user, updateWishlistDTO);
+    return this.userService.addToWishlist(user, updateWishlistDTO);
+  }
+
+  @UseGuards(jwtAuthGuard)
+  @Patch('wishlist/remove')
+  @ApiUser()
+  async removeFromWishlist(@Request() request: ExtendedRequest, @Body() updateWishlistDTO: UpdateWishlistDTO): Promise<UpdateWishlistResponse> {
+    const accessToken = request.get('authorization').split(' ')[1];
+    const user = await this.userService.getCurrentUser(accessToken);
+
+    return this.userService.removeFromWishlist(user, updateWishlistDTO);
   }
 
   @UseGuards(jwtAuthGuard)
