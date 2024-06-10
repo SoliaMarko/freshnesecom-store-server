@@ -5,6 +5,7 @@ import {JwtService} from '@nestjs/jwt';
 import {TokensResponseModel} from '../models/userResponses.model';
 import {MongoUserRepository} from '../repository/MongoUser.repository';
 import {UpdateWishlistDTO} from '../dto/updateWishlist.dto';
+import {UpdateWishlistResponse} from '../models/updateWishlistResponse.model';
 
 @Injectable()
 export class UserService {
@@ -55,13 +56,22 @@ export class UserService {
     await this.repository.clearTokens(user);
   }
 
-  async updateWishlist(user: UserResponseType, updateWishlistDTO: UpdateWishlistDTO) {
-    const {action, productIDs} = updateWishlistDTO;
-    await this.repository.updateWishlist(user, updateWishlistDTO);
+  async addToWishlist(user: UserResponseType, updateWishlistDTO: UpdateWishlistDTO): Promise<UpdateWishlistResponse> {
+    const {productIDs} = updateWishlistDTO;
+    await this.repository.addToWishlist(user, productIDs);
 
     return {
       success: true,
-      action,
+      productIDs
+    };
+  }
+
+  async removeFromWishlist(user: UserResponseType, updateWishlistDTO: UpdateWishlistDTO): Promise<UpdateWishlistResponse> {
+    const {productIDs} = updateWishlistDTO;
+    await this.repository.removeFromWishlist(user, productIDs);
+
+    return {
+      success: true,
       productIDs
     };
   }

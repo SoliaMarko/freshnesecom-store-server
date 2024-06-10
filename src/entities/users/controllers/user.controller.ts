@@ -2,17 +2,14 @@ import {Body, Controller, Get, Patch, Request, UseGuards} from '@nestjs/common';
 import {UserService} from '../services/user.service';
 import {UserResponseType} from '@customTypes/user.type';
 import {jwtAuthGuard} from '@guards/jwt-auth.guard';
-import {JwtService} from '@nestjs/jwt';
 import {ExtendedRequest} from '@interfaces/extendedRequest.interface';
 import {UpdateWishlistDTO} from '../dto/updateWishlist.dto';
 import {ApiUser} from 'decorators/swagger/user/apiUser.decorator';
+import {UpdateWishlistResponse} from '../models/updateWishlistResponse.model';
 
 @Controller('user')
 export class UserController {
-  constructor(
-    private readonly jwtService: JwtService,
-    private readonly userService: UserService
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   @UseGuards(jwtAuthGuard)
   @Get()
@@ -24,12 +21,22 @@ export class UserController {
   }
 
   @UseGuards(jwtAuthGuard)
-  @Patch('wishlist')
+  @Patch('wishlist/add')
   @ApiUser()
-  async updateWishlist(@Request() request: ExtendedRequest, @Body() updateWishlistDTO: UpdateWishlistDTO) {
+  async addToWishlist(@Request() request: ExtendedRequest, @Body() updateWishlistDTO: UpdateWishlistDTO): Promise<UpdateWishlistResponse> {
     const accessToken = request.get('authorization').split(' ')[1];
     const user = await this.userService.getCurrentUser(accessToken);
 
-    return this.userService.updateWishlist(user, updateWishlistDTO);
+    return this.userService.addToWishlist(user, updateWishlistDTO);
+  }
+
+  @UseGuards(jwtAuthGuard)
+  @Patch('wishlist/remove')
+  @ApiUser()
+  async removeFromWishlist(@Request() request: ExtendedRequest, @Body() updateWishlistDTO: UpdateWishlistDTO): Promise<UpdateWishlistResponse> {
+    const accessToken = request.get('authorization').split(' ')[1];
+    const user = await this.userService.getCurrentUser(accessToken);
+
+    return this.userService.removeFromWishlist(user, updateWishlistDTO);
   }
 }
