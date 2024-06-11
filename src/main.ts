@@ -9,12 +9,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({transform: true}));
 
-  const config = new DocumentBuilder()
-    .setTitle('Freshnesecom Store App')
-    .setDescription('API for Freshnesecom Store')
-    .setVersion('1.0')
-    .addTag('store')
-    .build();
+  const config = new DocumentBuilder().setTitle('Freshnesecom Store App').setDescription('API for Freshnesecom Store').setVersion('1.0').build();
   const document = SwaggerModule.createDocument(app, config);
 
   SwaggerModule.setup('api', app, document);

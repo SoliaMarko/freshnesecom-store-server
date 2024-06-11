@@ -9,6 +9,8 @@ import {ConfigModule, ConfigService} from '@nestjs/config';
 import {JwtModule} from '@nestjs/jwt';
 import {JwtStrategy} from 'strategy/jwt.strategy';
 import {RefreshJwtStrategy} from 'strategy/refresh.strategy';
+import {MongoUserRepository} from '@entities/users/repository/MongoUser.repository';
+import {MongoAuthRepository} from './repository/MongoAuth.repository';
 
 @Module({
   imports: [
@@ -25,6 +27,6 @@ import {RefreshJwtStrategy} from 'strategy/refresh.strategy';
     })
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserService, JwtStrategy, RefreshJwtStrategy]
+  providers: [AuthService, MongoAuthRepository, UserService, MongoUserRepository, JwtStrategy, RefreshJwtStrategy]
 })
 export class AuthModule {}

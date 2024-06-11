@@ -1,32 +1,25 @@
 import {LoginDTO} from '@entities/auth/dto/login.dto';
-import {UserEntity} from '@entities/users/schemas/UserEntity.schema';
 import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
 import {compare} from 'bcryptjs';
-import {Model} from 'mongoose';
 import {CreateUserDTO} from '../dto/createUser.dto';
-import {emailError, errorMessages} from '@constants/errorMessages/errorMessages.constant';
+import {errorMessages} from '@constants/errorMessages/errorMessages.constant';
 import {UserService} from '@entities/users/services/user.service';
 import {JwtService} from '@nestjs/jwt';
 import {UserDocument} from '@customTypes/user.type';
 import {LoginResponseModel, LogoutResponseModel, RefreshTokenResponseModel, SignupResponseModel} from '../models/authResponses.model';
 import {RefreshPayloadModel} from '../models/jwtPayload.model';
+import {MongoAuthRepository} from '../repository/MongoAuth.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
     private userService: UserService,
-    @InjectModel(UserEntity.name) private userModel: Model<UserDocument>
+    private readonly repository: MongoAuthRepository
   ) {}
 
   async signup(userDTO: CreateUserDTO): Promise<SignupResponseModel> {
-    const user = await this.userModel.findOne({email: userDTO.email});
-    if (user) {
-      throw new HttpException(emailError.ALREADY_REGISTERED, HttpStatus.UNPROCESSABLE_ENTITY);
-    }
-    const newUser = new this.userModel(userDTO);
-    await newUser.save();
+    const newUser = await this.repository.signup(userDTO);
 
     return {
       success: true,

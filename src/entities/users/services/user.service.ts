@@ -1,38 +1,42 @@
-import {Model} from 'mongoose';
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
-import {InjectModel} from '@nestjs/mongoose';
+import {Injectable} from '@nestjs/common';
 import {UserEntity} from '../schemas/UserEntity.schema';
-import {errorMessages} from '@constants/errorMessages/errorMessages.constant';
 import {UserDocument, UserResponseType} from '@customTypes/user.type';
 import {JwtService} from '@nestjs/jwt';
 import {TokensResponseModel} from '../models/userResponses.model';
+import {MongoUserRepository} from '../repository/MongoUser.repository';
+import {UpdateWishlistDTO} from '../dto/updateWishlist.dto';
+import {UpdateWishlistResponse} from '../models/updateWishlistResponse.model';
 
 @Injectable()
 export class UserService {
   constructor(
     private jwtService: JwtService,
-    @InjectModel(UserEntity.name) private userModel: Model<UserDocument>
+    private readonly repository: MongoUserRepository
   ) {}
 
-  async findByEmail(email: string): Promise<UserDocument | undefined> {
-    const user = await this.userModel.findOne({email}).select('+password');
-    if (user) return user;
+  async findByEmail(email: string): Promise<UserDocument> {
+    const user = await this.repository.findByEmail(email);
 
-    throw new HttpException(errorMessages.NOT_FOUND_BY_EMAIL, HttpStatus.UNPROCESSABLE_ENTITY);
+    return user;
   }
 
-  async findById(id: string): Promise<UserDocument | undefined> {
-    const user = await this.userModel.findById(id);
-    if (user) return user;
+  async findById(id: string): Promise<UserDocument> {
+    const user = await this.repository.findById(id);
 
-    throw new HttpException(errorMessages.NOT_FOUND_BY_ID, HttpStatus.UNPROCESSABLE_ENTITY);
+    return user;
+  }
+
+  async getCurrentUser(accessToken: string): Promise<UserResponseType> {
+    const {email} = this.jwtService.verify(accessToken);
+    const user = await this.findByEmail(email);
+
+    return this.buildUserResponse(user);
   }
 
   async getRefreshTokenById(id: string): Promise<string> {
-    const refreshToken = (await this.userModel.findById(id)).refreshToken;
-    if (refreshToken) return refreshToken;
+    const refreshToken = await this.repository.getRefreshTokenById(id);
 
-    throw new HttpException(errorMessages.NOT_FOUND_BY_ID, HttpStatus.UNPROCESSABLE_ENTITY);
+    return refreshToken;
   }
 
   async updateAndGetTokens(user: UserDocument): Promise<TokensResponseModel> {
@@ -40,7 +44,7 @@ export class UserService {
     const refreshTokenPayload = {sub: user._id};
     const accessToken = this.jwtService.sign(accessTokenPayload, {expiresIn: process.env.ACCESS_TOKEN_EXPIRES});
     const refreshToken = this.jwtService.sign(refreshTokenPayload, {expiresIn: process.env.REFRESH_TOKEN_EXPIRES});
-    await this.userModel.updateOne({email: user.email}, {$set: {accessToken: accessToken, refreshToken: refreshToken}});
+    await this.repository.updateTokens(user, accessToken, refreshToken);
 
     return {
       accessToken,
@@ -49,7 +53,27 @@ export class UserService {
   }
 
   async clearTokens(user: UserDocument): Promise<void> {
-    await this.userModel.updateOne({email: user.email}, {$unset: {accessToken: '', refreshToken: ''}});
+    await this.repository.clearTokens(user);
+  }
+
+  async addToWishlist(user: UserResponseType, updateWishlistDTO: UpdateWishlistDTO): Promise<UpdateWishlistResponse> {
+    const {productIDs} = updateWishlistDTO;
+    await this.repository.addToWishlist(user, productIDs);
+
+    return {
+      success: true,
+      productIDs
+    };
+  }
+
+  async removeFromWishlist(user: UserResponseType, updateWishlistDTO: UpdateWishlistDTO): Promise<UpdateWishlistResponse> {
+    const {productIDs} = updateWishlistDTO;
+    await this.repository.removeFromWishlist(user, productIDs);
+
+    return {
+      success: true,
+      productIDs
+    };
   }
 
   buildUserResponse(userEntity: UserEntity): UserResponseType {
@@ -57,7 +81,8 @@ export class UserService {
       firstName: userEntity.firstName,
       lastName: userEntity.lastName,
       email: userEntity.email,
-      phoneNumber: userEntity.phoneNumber
+      phoneNumber: userEntity.phoneNumber,
+      wishlist: userEntity.wishlist
     };
   }
 }

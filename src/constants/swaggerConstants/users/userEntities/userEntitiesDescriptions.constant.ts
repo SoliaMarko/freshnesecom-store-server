@@ -13,5 +13,6 @@ export const descriptions = {
   ${passwordValidationRules.UPPERCASE_MIN_COUNT} uppercase letters, 
   ${passwordValidationRules.NUMBERS_MIN_COUNT} numbers 
   and ${passwordValidationRules.SYMBOLS_MIN_COUNT} symbols`,
-  PHONE_NUMBER_DESCRIPTION: 'Phone number, optional field. It must start with the international calling code (e.g. +41)'
+  PHONE_NUMBER_DESCRIPTION: 'Phone number, optional field. It must start with the international calling code (e.g. +41)',
+  WISHLIST_DESCRIPTION: 'Wishlist with products id-s. It is array which contains of strings (valid mongoose id-s)'
 };
