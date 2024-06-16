@@ -1,4 +1,4 @@
-import {UserDocument, UserResponseType} from '@customTypes/user.type';
+import {UserDocument, UserResponseType} from '@customTypes/user/user.type';
 import {Types} from 'mongoose';
 
 export interface UserRepository {

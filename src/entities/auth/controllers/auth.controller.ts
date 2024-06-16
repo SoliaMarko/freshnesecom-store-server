@@ -5,7 +5,7 @@ import {CreateUserDTO} from '../dto/createUser.dto';
 import {LoginDTO} from '../dto/login.dto';
 import {refreshJwtAuthGuard} from '@guards/refresh-jwt-auth.guard';
 import {UserService} from '@entities/users/services/user.service';
-import {LoginResponseModel, LogoutResponseModel, RefreshTokenResponseModel, SignupResponseModel} from '../models/authResponses.model';
+import {LoginResponseModel, LogoutResponseModel, RefreshTokenResponseModel, SignupResponseModel} from '../models/responses/authResponses.model';
 import {ApiAuth} from 'decorators/swagger/auth/apiAuth.decorator';
 
 @Controller('auth')

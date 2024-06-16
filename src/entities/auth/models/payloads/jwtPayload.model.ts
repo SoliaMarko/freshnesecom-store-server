@@ -1,4 +1,4 @@
-import {UserResponseType} from '@customTypes/user.type';
+import {UserResponseType} from '@customTypes/user/user.type';
 
 export interface JwtPayloadModel extends UserResponseType {
   iat: number;

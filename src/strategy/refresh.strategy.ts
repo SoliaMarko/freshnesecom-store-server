@@ -1,4 +1,4 @@
-import {UserResponseType} from '@customTypes/user.type';
+import {UserResponseType} from '@customTypes/user/user.type';
 import {Injectable} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import {JwtPayload} from 'jsonwebtoken';

@@ -4,9 +4,8 @@ import {ProductRepository} from './Product.repository';
 import {InjectModel} from '@nestjs/mongoose';
 import {ProductEntity} from '../schemas/ProductEntity.schema';
 import {Model} from 'mongoose';
-import {ProductDocument, ProductResponseType} from '@customTypes/product.type';
+import {ProductDocument, ProductResponseType} from '@customTypes/products/product.type';
 import {productErrorMessages} from '@constants/errorMessages/productErrorMessages.constant';
-import {GetAllProductsRepositoryType} from '@customTypes/getAllProductsRepository.type';
 import {ProductsStatsDTO} from '../dto/stats/stats.dto';
 import {Category} from '@enums/products/categories.enum';
 import {getNumericEnumValues} from '@utils/enumTransformators/getNumericEnumValues';
@@ -15,6 +14,8 @@ import {sortByOptions} from '@constants/options/sortByOptions.constant';
 import {FiltersDTO} from '../dto/products/filters.dto';
 import {Brand} from '@enums/products/brands.enum';
 import {FiltersForStatsGettingDTO} from '../dto/stats/filtersForStatsGetting.dto';
+import {GetProductsResponseType} from '@customTypes/products/getProductsResponse.type';
+import {AllWishlistProductsParams} from '@customTypes/products/wishlistProductsParams.type';
 
 @Injectable()
 export class MongoProductRepository implements ProductRepository {
@@ -30,7 +31,7 @@ export class MongoProductRepository implements ProductRepository {
     return await newProduct.save();
   }
 
-  async getAllProducts(filtersDTO: FiltersDTO): Promise<GetAllProductsRepositoryType> {
+  async getAllProducts(filtersDTO: FiltersDTO): Promise<GetProductsResponseType> {
     const {page, itemsPerPage, minPrice, maxPrice, minRating, maxRating, category, brands, sortBy, order} = filtersDTO;
     const allPossibleCategoryValues = getNumericEnumValues(Category);
     const allPossibleBrandValues = getNumericEnumValues(Brand);
@@ -128,6 +129,23 @@ export class MongoProductRepository implements ProductRepository {
     const {minPrice, maxPrice, quantityByCategory} = statsAggregation;
 
     return {minPrice, maxPrice, quantityByCategory};
+  }
+
+  async getAllWishlistProducts(allWishlistProductsParams: AllWishlistProductsParams): Promise<GetProductsResponseType> {
+    const {page, itemsPerPage, user} = allWishlistProductsParams;
+    const filters = {
+      _id: {
+        $in: user.wishlist
+      }
+    };
+    const products = await this.productModel
+      .find(filters)
+      .limit(itemsPerPage)
+      .skip(page * itemsPerPage)
+      .exec();
+    const itemsCount = await this.productModel.countDocuments(filters);
+
+    return {products, itemsCount};
   }
 
   async getProductById(productID: string): Promise<ProductResponseType> {

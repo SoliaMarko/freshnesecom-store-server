@@ -1,4 +1,4 @@
-import {QuantityByCategoryType} from '@customTypes/quantityByCategory.type';
+import {QuantityByCategoryType} from '@customTypes/products/quantityByCategory.type';
 
 export class ProductsStatsDTO {
   constructor(minPrice: number, maxPrice: number, quantityByCategory: QuantityByCategoryType[]) {

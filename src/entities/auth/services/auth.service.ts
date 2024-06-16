@@ -5,9 +5,9 @@ import {CreateUserDTO} from '../dto/createUser.dto';
 import {errorMessages} from '@constants/errorMessages/errorMessages.constant';
 import {UserService} from '@entities/users/services/user.service';
 import {JwtService} from '@nestjs/jwt';
-import {UserDocument} from '@customTypes/user.type';
-import {LoginResponseModel, LogoutResponseModel, RefreshTokenResponseModel, SignupResponseModel} from '../models/authResponses.model';
-import {RefreshPayloadModel} from '../models/jwtPayload.model';
+import {UserDocument} from '@customTypes/user/user.type';
+import {LoginResponseModel, LogoutResponseModel, RefreshTokenResponseModel, SignupResponseModel} from '../models/responses/authResponses.model';
+import {RefreshPayloadModel} from '../models/payloads/jwtPayload.model';
 import {MongoAuthRepository} from '../repository/MongoAuth.repository';
 
 @Injectable()

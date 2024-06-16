@@ -1,8 +1,8 @@
 import {Injectable} from '@nestjs/common';
 import {UserEntity} from '../schemas/UserEntity.schema';
-import {UserDocument, UserResponseType} from '@customTypes/user.type';
+import {UserDocument, UserResponseType} from '@customTypes/user/user.type';
 import {JwtService} from '@nestjs/jwt';
-import {TokensResponseModel} from '../models/userResponses.model';
+import {TokensResponseModel} from '../models/responses/userResponses.model';
 import {MongoUserRepository} from '../repository/MongoUser.repository';
 import {UpdateWishlistDTO} from '../dto/updateWishlist.dto';
 import {UpdateWishlistResponse} from '../models/updateWishlistResponse.model';
