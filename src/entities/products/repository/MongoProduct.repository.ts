@@ -69,7 +69,7 @@ export class MongoProductRepository implements ProductRepository {
     const brandsArray = brands
       ?.split(',')
       .map((brand) => Number(brand))
-      .filter((brand) => brand !== 0);
+      .filter((brand) => brand);
     const categories = getNumericEnumValues(Category);
     const quantityByCategoryArr = categories.map((category) => ({category: category, items: `$category${category}`}));
     const statsPipeline = [
