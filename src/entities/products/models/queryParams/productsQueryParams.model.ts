@@ -5,6 +5,9 @@ import {Type} from 'class-transformer';
 import {PaginationQueryParams} from './paginationQueryParams.model';
 
 export class ProductsQueryParams extends PaginationQueryParams {
+  @Type(() => String)
+  readonly search: string;
+
   @Type(() => Number)
   readonly minPrice: number;
 

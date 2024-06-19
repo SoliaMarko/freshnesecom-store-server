@@ -32,7 +32,7 @@ export class MongoProductRepository implements ProductRepository {
   }
 
   async getAllProducts(filtersDTO: FiltersDTO): Promise<GetProductsResponseType> {
-    const {page, itemsPerPage, minPrice, maxPrice, minRating, maxRating, category, brands, sortBy, order} = filtersDTO;
+    const {page, itemsPerPage, search, minPrice, maxPrice, minRating, maxRating, category, brands, sortBy, order} = filtersDTO;
     const allPossibleCategoryValues = getNumericEnumValues(Category);
     const allPossibleBrandValues = getNumericEnumValues(Brand);
     const brandsArray = brands
@@ -40,6 +40,9 @@ export class MongoProductRepository implements ProductRepository {
       .map((brand) => Number(brand))
       .filter((item) => item !== 0);
     const filters = {
+      title: {
+        $regex: new RegExp(search, 'i')
+      },
       price: {
         $gte: minPrice || 0,
         $lte: maxPrice || Infinity
