@@ -8,6 +8,7 @@ export class FiltersDTO {
   constructor({
     page = globalProductConstants.default.DEFAULT_PAGE,
     itemsPerPage = globalProductConstants.default.DEFAULT_ITEMS_PER_PAGE,
+    search = '',
     minPrice,
     maxPrice,
     minRating,
@@ -19,6 +20,7 @@ export class FiltersDTO {
   }: FitersDTOTypes) {
     this.page = page;
     this.itemsPerPage = itemsPerPage;
+    this.search = search;
     this.minPrice = minPrice;
     this.maxPrice = maxPrice;
     this.minRating = minRating;
@@ -31,6 +33,7 @@ export class FiltersDTO {
 
   readonly page?: number;
   readonly itemsPerPage?: number;
+  readonly search?: string;
   readonly minPrice?: number;
   readonly maxPrice?: number;
   readonly minRating?: number;

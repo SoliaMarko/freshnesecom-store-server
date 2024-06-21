@@ -5,6 +5,7 @@ import {SortBy} from '@enums/sort/sortBy.enum';
 export interface FitersDTOTypes {
   page?: number;
   itemsPerPage?: number;
+  search: string;
   minPrice?: number;
   maxPrice?: number;
   minRating?: number;
